@@ -17,13 +17,6 @@ enum GameState
     QUIT
 };
 
-enum EntityType
-{
-    Empty,
-    Wall,
-    Gate
-};
-
 class Game
 {
 public:
@@ -39,6 +32,7 @@ public:
 private:
     Player _player;
     Texture _wall;
+    Texture _gate;
     GameState _state;
     int _gridSizeforOneUnit;
     Renderer *_renderer;
@@ -46,5 +40,4 @@ private:
     Level _level;
 
     std::vector<Line> _lines;
-    std::vector<Texture> _sprites;
 };

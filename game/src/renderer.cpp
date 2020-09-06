@@ -9,8 +9,8 @@ Renderer::Renderer(SDL_Window *window)
     Renderer::_renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     Renderer::_instance = this;
     {
-        _drawColor._r = 255;
-        _drawColor._g = 0;
+        _drawColor._r = 0;
+        _drawColor._g = 255;
         _drawColor._b = 0;
     }
 
@@ -48,8 +48,8 @@ void Renderer::RenderBackground(const DrawColor &color)
 
 void Renderer::RenderBackground()
 {
-    SDL_SetRenderDrawColor(_renderer, _bgColor._r, _bgColor._g, _bgColor._b, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(_renderer);
+    SDL_SetRenderDrawColor(_renderer, _bgColor._r, _bgColor._g, _bgColor._b, SDL_ALPHA_OPAQUE);
 }
 
 void Renderer::RenderTexture(const Texture *texture)

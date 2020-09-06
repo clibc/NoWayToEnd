@@ -1,32 +1,33 @@
 #include "game.h"
 
 Game::Game()
-    : _player(Player(0, 240)), _level("../levels/level1.txt")
+    : _player(Player(0, 240)), _level("../levels/level1.lvl")
 {
     _gridSizeforOneUnit = WIN_H / 10;
     _run = true;
     _renderer = Renderer::GetInstance();
     Init();
     _state = RUNNING;
-
-    DEBUG(_gridSizeforOneUnit);
 }
 
 Game::~Game() {}
 
 void Game::Update()
 {
-
     while (_run)
     {
-        DEBUG(_player._positionX << "," << _player._positionY);
         HandleInput();
         switch (_state)
         {
         case RUNNING:
             Render();
+            if (_player._positionX == _level._gatePosX && _player._positionY == _level._gatePosY)
+                _state = PLAYERWIN;
             break;
         case PLAYERWIN:
+            _renderer->Begin();
+            _renderer->RenderBackground({100, 100, 0});
+            _renderer->End();
             break;
         case PLAYERLOSE:
             break;
@@ -34,7 +35,6 @@ void Game::Update()
             break;
         case QUIT:
             _run = false;
-            DEBUG("run is false");
             break;
         default:
             break;
@@ -47,10 +47,6 @@ void Game::Render()
     _renderer->Begin();
     _renderer->RenderTexture(_player.GetRenderData());
     PassLevelDataToRenderer(_level);
-    for (Texture sprite : _sprites)
-    {
-        _renderer->RenderTexture(&sprite);
-    }
 
     for (Line line : _lines)
     {
@@ -63,6 +59,7 @@ void Game::Render()
 void Game::Init()
 {
     _wall = Texture("../img/wall.png", 256, 256, 80, 80, 0, 0);
+    _gate = Texture("../img/coin.png", 256, 256, 80, 80, _level._gatePosX, _level._gatePosY);
     for (int i = 1; i < _gridSizeforOneUnit; i++)
     {
         int position = i * CELLSIZE;
@@ -88,22 +85,18 @@ void Game::HandleInput()
             switch (e.key.keysym.sym)
             {
             case SDLK_a:
-                DEBUG("Key A Pressed!");
                 if (IsMovementPossible(LEFT))
                     _player.Move(LEFT);
                 break;
             case SDLK_d:
-                DEBUG("Key D Pressed!");
                 if (IsMovementPossible(RIGHT))
                     _player.Move(RIGHT);
                 break;
             case SDLK_w:
-                DEBUG("Key W Pressed!");
                 if (IsMovementPossible(UP))
                     _player.Move(UP);
                 break;
             case SDLK_s:
-                DEBUG("Key S Pressed!");
                 if (IsMovementPossible(DOWN))
                     _player.Move(DOWN);
                 break;
@@ -139,7 +132,7 @@ void Game::PassLevelDataToRenderer(Level level)
             _renderer->RenderTexture(&_wall);
             break;
         case Gate:
-            //not implemented yet
+            _renderer->RenderTexture(&_gate);
             break;
         default:
             break;
@@ -174,7 +167,7 @@ bool Game::IsMovementPossible(Direction dir)
 
     int index = (row * COLUMNCOUNT + col);
 
-    if (_level._blocks[index] != Wall && ((tempX >= 0 && tempX < 800) && (tempY >= 0 && tempY < 800)))
+    if (_level._blocks[index] != Wall && ((tempX >= 0 && tempX < WIN_W) && (tempY >= 0 && tempY < WIN_H)))
         return true;
     else
         return false;
