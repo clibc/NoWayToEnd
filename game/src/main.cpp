@@ -8,6 +8,8 @@ int main(int argc, char *args[])
         std::cout << "Initializatin failed!"
                   << "\n";
 
+    TTF_Init();
+
     SDL_Window *window;
     window = SDL_CreateWindow("Sdl window",
                               SDL_WINDOWPOS_CENTERED,
@@ -21,6 +23,7 @@ int main(int argc, char *args[])
     myGame.Update();
 
     SDL_DestroyWindow(window);
+    TTF_Quit();
     SDL_Quit();
 
     return 0;

@@ -16,6 +16,6 @@ public:
     inline SDL_Texture *GetTexture() const { return _texture; }
     ~Texture();
 
-private:
+protected:
     SDL_Texture *_texture;
 };

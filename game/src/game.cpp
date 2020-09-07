@@ -48,6 +48,11 @@ void Game::Render()
     _renderer->RenderTexture(_player.GetRenderData());
     PassLevelDataToRenderer(_level);
 
+    //if (SDL_RenderCopy(Renderer::GetRenderer(), _text.GetTexture(), NULL, NULL))
+    //  DEBUG(SDL_GetError() << "1");
+
+    _renderer->RenderTextTexture(&_text);
+
     for (Line line : _lines)
     {
         _renderer->DrawLine(line);
@@ -60,6 +65,8 @@ void Game::Init()
 {
     _wall = Texture("../img/wall.png", 256, 256, 80, 80, 0, 0);
     _gate = Texture("../img/coin.png", 256, 256, 80, 80, _level._gatePosX, _level._gatePosY);
+    _text = Text("Game text", {255, 255, 255, 255}, 50, 200, 0);
+
     for (int i = 1; i < _gridSizeforOneUnit; i++)
     {
         int position = i * CELLSIZE;

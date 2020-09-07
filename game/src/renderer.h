@@ -16,6 +16,7 @@ public:
     void RenderBackground(const DrawColor &color);
     void RenderBackground();
     void RenderTexture(const Texture *texture);
+    void RenderTextTexture(const Texture *texture);
     void End();
 
 private:

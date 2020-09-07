@@ -5,7 +5,8 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "C:/Users/root/Desktop/sdl_game/game/Dependencies/SDL2/include",
-                "C:/Users/root/Desktop/sdl_game/game/Dependencies/SDL2_image/include"
+                "C:/Users/root/Desktop/sdl_game/game/Dependencies/SDL2_image/include",
+                "C:/Users/root/Desktop/sdl_game/game/Dependencies/SDL2_ttf/include"
             ],
             "defines": [
                 "_DEBUG",

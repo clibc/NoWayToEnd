@@ -6,6 +6,7 @@
 #include "player.h"
 #include "utils.h"
 #include "level.h"
+#include "text.h"
 #include "vector"
 
 enum GameState
@@ -38,6 +39,7 @@ private:
     Renderer *_renderer;
     bool _run;
     Level _level;
+    Text _text;
 
     std::vector<Line> _lines;
 };

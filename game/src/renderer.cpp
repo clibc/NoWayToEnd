@@ -58,6 +58,12 @@ void Renderer::RenderTexture(const Texture *texture)
         DEBUG(SDL_GetError());
 }
 
+void Renderer::RenderTextTexture(const Texture *texture)
+{
+    if (SDL_RenderCopy(_renderer, texture->GetTexture(), NULL, &texture->_destRect))
+        DEBUG(SDL_GetError() << "Text");
+}
+
 void Renderer::End()
 {
     SDL_RenderPresent(_renderer);
