@@ -10,17 +10,22 @@ static void LoadLevel(const char *filepath, std::vector<int> &blocks)
     std::ifstream _fStream;
     _fStream = std::ifstream(filepath);
 
-    if (_fStream)
+    if (_fStream.is_open())
     {
-
-        while (!_fStream.eof())
+        if (_fStream)
         {
-            std::getline(_fStream, line, ',');
-            blocks.push_back(std::stoi(line));
+
+            while (!_fStream.eof())
+            {
+                std::getline(_fStream, line, ',');
+                blocks.push_back(std::stoi(line));
+            }
+        }
+        else
+        {
+            DEBUG("failed to open level file");
         }
     }
     else
-    {
-        DEBUG("failed to open level file");
-    }
+        DEBUG("level_loader.h:failed to open level file");
 }

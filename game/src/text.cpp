@@ -11,6 +11,8 @@ Text::Text(char *text, SDL_Color color, int size, int posX, int posY)
     _surface = TTF_RenderText_Solid(_font, _text, color);
 
     _texture = SDL_CreateTextureFromSurface(Renderer::GetRenderer(), _surface);
+    if (_texture == NULL)
+        DEBUG("Text.cpp: Texture is NULL" << SDL_GetError);
 
     SDL_QueryTexture(_texture, NULL, NULL, &_destRect.w, &_destRect.h);
 }

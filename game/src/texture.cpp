@@ -17,9 +17,11 @@ Texture::Texture(const char *filename, int imageSizeW, int imageSizeH,
     SDL_RWops *file = SDL_RWFromFile(filename, "rb");
     SDL_Surface *_image = IMG_LoadPNG_RW(file);
     if (!_image)
-        DEBUG("IMG_Load_RW: " << IMG_GetError());
+        DEBUG("texture.cpp: IMG_Load_RW: " << IMG_GetError());
 
     _texture = SDL_CreateTextureFromSurface(Renderer::GetRenderer(), _image);
+    if (_texture == NULL)
+        DEBUG("Texture.cpp: Texture is NULL" << SDL_GetError);
     SDL_FreeSurface(_image);
 }
 

@@ -4,9 +4,6 @@
 
 // TTF_Init() should be already called
 
-#define WORDSIZEX 16
-#define WORDSIZEY 20
-
 #define USEDFONT "../fonts/calibrii.ttf"
 
 class Text : public Texture
