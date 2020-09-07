@@ -9,6 +9,7 @@ int main(int argc, char *args[])
                   << "\n";
 
     TTF_Init();
+    IMG_Init(IMG_INIT_PNG);
 
     SDL_Window *window;
     window = SDL_CreateWindow("Sdl window",
@@ -23,6 +24,8 @@ int main(int argc, char *args[])
     myGame.Update();
 
     SDL_DestroyWindow(window);
+
+    IMG_Quit();
     TTF_Quit();
     SDL_Quit();
 
