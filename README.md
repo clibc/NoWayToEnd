@@ -1,10 +1,10 @@
-# No Way To End
+# NoWayToEnd
 
-2D Game but ends only if you cheat. (Not really for now)
-This game is written in C++ with SDL2 and still in development.
+2D Game but ends only if you cheat. (Not really for now) <br/>
+This game is written in C++ with SDL2 and still in development. <br/>
 You can design your own levels.
 
-![](https://thumbs.gfycat.com/DirectFrayedGallowaycow-size_restricted.gif)
+![](https://thumbs.gfycat.com/WeakKlutzyBlackfly-size_restricted.gif)
 
 Besides the game, the codebase is an API that you can use to make any kind of 2D game.
 
