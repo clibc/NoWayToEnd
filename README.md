@@ -4,7 +4,7 @@
 This game is written in C++ with SDL2 and still in development.
 You can design your own levels.
 
-![](https://thumbs.gfycat.com/DirectFrayedGallowaycow-size_restricted.gif =300x300)
+![](https://thumbs.gfycat.com/DirectFrayedGallowaycow-size_restricted.gif)
 
 Besides the game, the codebase is an API that you can use to make any kind of 2D game.
 
@@ -25,7 +25,7 @@ Open `level1.lvl` with Notepad and Edit it according to pattern below:
   - `3`  Player's start position
 
 The way I designed the game only supports the `10x10` level for now. The main purpose I prefer this because SDL2 has no support for batch rendering and making a draw call for each tile is so expensive. In order to make this happen, I will add OpenGL support.
-The example level is shown above in the picture.
+The example level is shown above in the gif.
 ```
 1,0,1,1,1,1,1,1,1,1,
 1,0,0,0,0,1,0,0,0,2,
