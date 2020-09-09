@@ -49,12 +49,10 @@ void Game::Render()
         _renderer->RenderTexture(_player.GetRenderData());
 
         PassLevelDataToRenderer(_level);
-
         for (Line line : _lines)
         {
             _renderer->DrawLine(line);
         }
-
         _renderer->RenderTextTexture(&_text);
 
         _positionText = "Player's Position : " + std::to_string(_player._positionX) + "," + std::to_string(_player._positionY);
@@ -66,7 +64,7 @@ void Game::Render()
 void Game::Init()
 {
     _wall = Texture("../img/wall.png", 256, 256, 80, 80, 0, 0);
-    _gate = Texture("../img/coin.png", 256, 256, 80, 80, _level._gatePosX, _level._gatePosY);
+    _coin = Animation("../img/coin_anim1.png", 561, 129, 140, _level._gatePosX, _level._gatePosY);
     _player = Player(_level._playerPosX, _level._playerPosY);
     _text = Text("Player position :", {255, 255, 255, 255}, 25, 0, 0);
 
@@ -84,7 +82,7 @@ void Game::Init()
 void Game::HandleInput()
 {
     SDL_Event e;
-    if (SDL_WaitEvent(&e))
+    if (SDL_PollEvent(&e))
     {
         switch (e.type)
         {
@@ -144,7 +142,7 @@ void Game::PassLevelDataToRenderer(Level level)
             _renderer->RenderTexture(&_wall);
             break;
         case Gate:
-            _renderer->RenderTexture(&_gate);
+            _coin.Play();
             break;
         default:
             break;

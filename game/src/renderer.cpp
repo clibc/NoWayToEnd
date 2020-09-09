@@ -61,7 +61,13 @@ void Renderer::RenderTexture(const Texture *texture)
 void Renderer::RenderTextTexture(const Texture *texture)
 {
     if (SDL_RenderCopy(_renderer, texture->GetTexture(), NULL, &texture->_destRect))
-        DEBUG(SDL_GetError() << "Text");
+        DEBUG(SDL_GetError() << " Text");
+}
+
+void Renderer::RenderAnimationFrame(SDL_Texture *texture, const SDL_Rect *srect, const SDL_Rect *drect)
+{
+    if (SDL_RenderCopy(_renderer, texture, srect, drect))
+        DEBUG(SDL_GetError() << " Animation");
 }
 
 void Renderer::End()

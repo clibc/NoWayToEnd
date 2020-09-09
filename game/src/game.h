@@ -8,6 +8,7 @@
 #include "level.h"
 #include "text.h"
 #include "vector"
+#include "animation.h"
 
 enum GameState
 {
@@ -33,13 +34,14 @@ public:
 private:
     Player _player;
     Texture _wall;
-    Texture _gate;
     GameState _state;
     int _gridSizeforOneUnit;
     Renderer *_renderer;
     bool _run;
     Level _level;
     Text _text;
+
+    Animation _coin;
 
     std::vector<Line> _lines;
     std::string _positionText;

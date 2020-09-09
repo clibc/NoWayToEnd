@@ -17,6 +17,7 @@ public:
     void RenderBackground();
     void RenderTexture(const Texture *texture);
     void RenderTextTexture(const Texture *texture);
+    void RenderAnimationFrame(SDL_Texture *texture, const SDL_Rect *srect, const SDL_Rect *drect);
     void End();
 
 private:
