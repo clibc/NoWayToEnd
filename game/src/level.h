@@ -5,7 +5,8 @@ enum EntityType
 {
     Empty,
     Wall,
-    Gate
+    Gate,
+    PlayerLoc
 };
 
 class Level
@@ -16,15 +17,26 @@ public:
     {
         LoadLevel(filepath, _blocks);
 
+        int row;
+        int column;
+
         for (int i = 0; i < 100; i++)
         {
             if (_blocks[i] == Gate)
             {
-                int row = i / COLUMNCOUNT;
-                int column = i % ROWCOUNT;
+                row = i / COLUMNCOUNT;
+                column = i % ROWCOUNT;
 
                 _gatePosX = column * CELLSIZE;
                 _gatePosY = row * CELLSIZE;
+            }
+            else if (_blocks[i] == PlayerLoc)
+            {
+                row = i / COLUMNCOUNT;
+                column = i % ROWCOUNT;
+
+                _playerPosX = column * CELLSIZE;
+                _playerPosY = row * CELLSIZE;
             }
         }
     }
@@ -32,4 +44,7 @@ public:
 
     int _gatePosX;
     int _gatePosY;
+
+    int _playerPosX;
+    int _playerPosY;
 };

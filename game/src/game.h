@@ -42,4 +42,5 @@ private:
     Text _text;
 
     std::vector<Line> _lines;
+    std::string _positionText;
 };

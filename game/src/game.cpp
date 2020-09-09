@@ -1,7 +1,7 @@
 #include "game.h"
 
 Game::Game()
-    : _player(Player(0, 240)), _level("../levels/level1.lvl")
+    : _level("../levels/level1.lvl")
 {
     _gridSizeforOneUnit = WIN_H / 10;
     _run = true;
@@ -45,19 +45,21 @@ void Game::Update()
 void Game::Render()
 {
     _renderer->Begin();
-    _renderer->RenderTexture(_player.GetRenderData());
-    PassLevelDataToRenderer(_level);
-
-    //if (SDL_RenderCopy(Renderer::GetRenderer(), _text.GetTexture(), NULL, NULL))
-    //  DEBUG(SDL_GetError() << "1");
-
-    _renderer->RenderTextTexture(&_text);
-
-    for (Line line : _lines)
     {
-        _renderer->DrawLine(line);
-    }
+        _renderer->RenderTexture(_player.GetRenderData());
 
+        PassLevelDataToRenderer(_level);
+
+        for (Line line : _lines)
+        {
+            _renderer->DrawLine(line);
+        }
+
+        _renderer->RenderTextTexture(&_text);
+
+        _positionText = "Player's Position : " + std::to_string(_player._positionX) + "," + std::to_string(_player._positionY);
+        _text.ChangeContext(_positionText.c_str());
+    }
     _renderer->End();
 }
 
@@ -65,7 +67,8 @@ void Game::Init()
 {
     _wall = Texture("../img/wall.png", 256, 256, 80, 80, 0, 0);
     _gate = Texture("../img/coin.png", 256, 256, 80, 80, _level._gatePosX, _level._gatePosY);
-    _text = Text("Game text", {255, 255, 255, 255}, 50, 200, 0);
+    _player = Player(_level._playerPosX, _level._playerPosY);
+    _text = Text("Player position :", {255, 255, 255, 255}, 25, 0, 0);
 
     for (int i = 1; i < _gridSizeforOneUnit; i++)
     {
@@ -81,7 +84,7 @@ void Game::Init()
 void Game::HandleInput()
 {
     SDL_Event e;
-    if (SDL_PollEvent(&e))
+    if (SDL_WaitEvent(&e))
     {
         switch (e.type)
         {
@@ -107,6 +110,8 @@ void Game::HandleInput()
                 if (IsMovementPossible(DOWN))
                     _player.Move(DOWN);
                 break;
+            case SDLK_ESCAPE:
+                _state = QUIT;
 
             default:
                 break;

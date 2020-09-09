@@ -16,6 +16,7 @@ public:
     int _positionX;
     int _positionY;
 
+    Player() = default;
     Player(int posX, int posY);
     void Move(Direction direction);
     inline const Texture *GetRenderData() const { return &_sprite; }
