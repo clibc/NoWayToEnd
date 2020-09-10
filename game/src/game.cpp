@@ -54,9 +54,6 @@ void Game::Render()
             _renderer->DrawLine(line);
         }
         _renderer->RenderTextTexture(&_text);
-
-        _positionText = "Player's Position : " + std::to_string(_player._positionX) + "," + std::to_string(_player._positionY);
-        _text.ChangeContext(_positionText.c_str());
     }
     _renderer->End();
 }
@@ -67,6 +64,8 @@ void Game::Init()
     _coin = Animation("../img/coin_anim1.png", 561, 129, 140, _level._gatePosX, _level._gatePosY);
     _player = Player(_level._playerPosX, _level._playerPosY);
     _text = Text("Player position :", {255, 255, 255, 255}, 25, 0, 0);
+
+    UpdateGameText();
 
     for (int i = 1; i < _gridSizeforOneUnit; i++)
     {
@@ -114,6 +113,7 @@ void Game::HandleInput()
             default:
                 break;
             }
+            UpdateGameText();
             break;
         default:
             break;
@@ -181,4 +181,10 @@ bool Game::IsMovementPossible(Direction dir)
         return true;
     else
         return false;
+}
+
+void Game::UpdateGameText()
+{
+    _positionText = "Player's Position : " + std::to_string(_player._positionX) + "," + std::to_string(_player._positionY);
+    _text.ChangeContext(_positionText.c_str());
 }

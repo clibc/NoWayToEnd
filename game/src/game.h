@@ -29,6 +29,7 @@ public:
     void HandleInput();
     void Init();
     void PassLevelDataToRenderer(Level level);
+    void UpdateGameText();
     bool IsMovementPossible(Direction dir);
 
 private:
