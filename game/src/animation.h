@@ -16,7 +16,7 @@ public:
 private:
     Renderer *_renderer;
     SDL_Rect _srcRects[FRAMECOUNT];
-    SDL_Rect _destRects[FRAMECOUNT];
+    SDL_Rect _destRect;
     SDL_Texture *_texture;
 
     int _frame;

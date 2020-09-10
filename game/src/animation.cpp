@@ -4,7 +4,7 @@ Animation::Animation(const char *path, int imageSizeW,
                      int imageSizeH, int frameSize, int posX, int posY)
     : _renderer(Renderer::GetInstance()), _frame(0)
 {
-    // TODO: CHANGE THIS DECLARATIONS
+    // TODO: CHANGE THESE DECLARATIONS
     // SOME NOOBIE PROBLEMS :)
 
     _srcRects[0] = {12, 0, 151, 170};
@@ -13,11 +13,7 @@ Animation::Animation(const char *path, int imageSizeW,
     _srcRects[3] = {802, 0, 151, 170};
     _srcRects[4] = {1000, 0, 151, 170};
 
-    _destRects[0] = {posX, posY, 80, 80};
-    _destRects[1] = {posX, posY, 80, 80};
-    _destRects[2] = {posX, posY, 80, 80};
-    _destRects[3] = {posX, posY, 80, 80};
-    _destRects[4] = {posX, posY, 80, 80};
+    _destRect = {posX, posY, 80, 80};
 
     SDL_RWops *file = SDL_RWFromFile(path, "rb");
     SDL_Surface *_image = IMG_LoadPNG_RW(file);
@@ -34,9 +30,8 @@ void Animation::Play()
 {
     // TODO: Count deltaTime instead of dividing by const integer.
     SDL_Rect *currentClip = &_srcRects[_frame / ANIMDELAY];
-    SDL_Rect *currentCLipD = &_destRects[_frame / ANIMDELAY];
 
-    _renderer->RenderAnimationFrame(_texture, currentClip, currentCLipD);
+    _renderer->RenderAnimationFrame(_texture, currentClip, &_destRect);
 
     _frame++;
     if (_frame / ANIMDELAY >= FRAMECOUNT)
