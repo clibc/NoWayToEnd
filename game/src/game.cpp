@@ -16,6 +16,9 @@ void Game::Update()
 {
     while (_run)
     {
+        _time->Update();
+
+        DEBUG(Time::DeltaTime());
         HandleInput();
         switch (_state)
         {
@@ -60,8 +63,12 @@ void Game::Render()
 
 void Game::Init()
 {
+    _time = Time::GetInstance();
     _wall = Texture("../img/wall.png", 256, 256, 80, 80, 0, 0);
-    _coin = Animation("../img/coin_anim1.png", 561, 129, 140, _level._gatePosX, _level._gatePosY);
+    //_coin = Animation("../img/coins.png", 127, 16, 16, _level._gatePosX, _level._gatePosY);
+    //_coin = Animation("../img/coin_anim1.png", 1151, 171, 183, _level._gatePosX, _level._gatePosY);
+    _coin = Animation("../img/coin2.png", 192, 32, 32, _level._gatePosX, _level._gatePosY);
+
     _player = Player(_level._playerPosX, _level._playerPosY);
     _text = Text("Player position :", {255, 255, 255, 255}, 25, 0, 0);
 

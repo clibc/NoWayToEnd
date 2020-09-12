@@ -9,6 +9,7 @@
 #include "text.h"
 #include "vector"
 #include "animation.h"
+#include "time.h"
 
 enum GameState
 {
@@ -46,4 +47,6 @@ private:
 
     std::vector<Line> _lines;
     std::string _positionText;
+
+    Time *_time;
 };

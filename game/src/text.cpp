@@ -26,10 +26,9 @@ Text::Text(const Text &text1)
 
 void Text::ChangeContext(const char *text)
 {
-    //Memory leak occurs here
     SDL_DestroyTexture(_texture);
     SDL_FreeSurface(_surface);
-    //
+
     _surface = TTF_RenderText_Solid(_font, text, _color);
     _texture = SDL_CreateTextureFromSurface(Renderer::GetRenderer(), _surface);
     SDL_QueryTexture(_texture, NULL, NULL, &_destRect.w, &_destRect.h);
