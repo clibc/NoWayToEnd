@@ -4,8 +4,8 @@ Game::Game()
     : _level("../levels/level1.lvl")
 {
     _gridSizeforOneUnit = WIN_H / 10;
-    _run = true;
-    _renderer = Renderer::GetInstance();
+    _run                = true;
+    _renderer           = Renderer::GetInstance();
     Init();
     _state = RUNNING;
 }
@@ -14,14 +14,10 @@ Game::~Game() {}
 
 void Game::Update()
 {
-    while (_run)
-    {
+    while (_run) {
         _time->Update();
-
-        DEBUG(Time::DeltaTime());
         HandleInput();
-        switch (_state)
-        {
+        switch (_state) {
         case RUNNING:
             Render();
             if (_player._positionX == _level._gatePosX && _player._positionY == _level._gatePosY)
@@ -29,7 +25,7 @@ void Game::Update()
             break;
         case PLAYERWIN:
             _renderer->Begin();
-            _renderer->RenderBackground({100, 100, 0});
+            _renderer->RenderBackground({ 100, 100, 0 });
             _renderer->End();
             break;
         case PLAYERLOSE:
@@ -49,11 +45,11 @@ void Game::Render()
 {
     _renderer->Begin();
     {
-        _renderer->RenderTexture(_player.GetRenderData());
+        //_renderer->RenderTexture(_player.GetRenderData());
+        _player.GetAnim()->Play();
 
         PassLevelDataToRenderer(_level);
-        for (Line line : _lines)
-        {
+        for (Line line : _lines) {
             _renderer->DrawLine(line);
         }
         _renderer->RenderTextTexture(&_text);
@@ -65,17 +61,14 @@ void Game::Init()
 {
     _time = Time::GetInstance();
     _wall = Texture("../img/wall.png", 256, 256, 80, 80, 0, 0);
-    //_coin = Animation("../img/coins.png", 127, 16, 16, _level._gatePosX, _level._gatePosY);
-    //_coin = Animation("../img/coin_anim1.png", 1151, 171, 183, _level._gatePosX, _level._gatePosY);
     _coin = Animation("../img/coin2.png", 192, 32, 32, _level._gatePosX, _level._gatePosY);
 
     _player = Player(_level._playerPosX, _level._playerPosY);
-    _text = Text("Player position :", {255, 255, 255, 255}, 25, 0, 0);
+    _text   = Text("Player position :", { 255, 255, 255, 255 }, 25, 0, 0);
 
     UpdateGameText();
 
-    for (int i = 1; i < _gridSizeforOneUnit; i++)
-    {
+    for (int i = 1; i < _gridSizeforOneUnit; i++) {
         int position = i * CELLSIZE;
         Line line1(position, 0, position, 800);
         Line line2(0, position, 800, position);
@@ -88,16 +81,13 @@ void Game::Init()
 void Game::HandleInput()
 {
     SDL_Event e;
-    if (SDL_PollEvent(&e))
-    {
-        switch (e.type)
-        {
+    if (SDL_PollEvent(&e)) {
+        switch (e.type) {
         case SDL_QUIT:
             _state = QUIT;
             break;
         case SDL_KEYDOWN:
-            switch (e.key.keysym.sym)
-            {
+            switch (e.key.keysym.sym) {
             case SDLK_a:
                 if (IsMovementPossible(LEFT))
                     _player.Move(LEFT);
@@ -135,15 +125,13 @@ void Game::PassLevelDataToRenderer(Level level)
     int row;
     int column;
 
-    for (int i = 0; i < 100; i++)
-    {
-        switch (_level._blocks[i])
-        {
+    for (int i = 0; i < 100; i++) {
+        switch (_level._blocks[i]) {
         case Empty:
             //clean code :)
             break;
         case Wall:
-            row = i / COLUMNCOUNT;
+            row    = i / COLUMNCOUNT;
             column = i % ROWCOUNT;
             _wall.ChangePositionOnScreen(column * CELLSIZE, row * CELLSIZE);
             _renderer->RenderTexture(&_wall);
@@ -162,8 +150,7 @@ bool Game::IsMovementPossible(Direction dir)
     int tempX = _player._positionX;
     int tempY = _player._positionY;
 
-    switch (dir)
-    {
+    switch (dir) {
     case UP:
         tempY -= CELLSIZE;
         break;

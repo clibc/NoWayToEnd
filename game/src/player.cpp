@@ -1,15 +1,15 @@
 #include "player.h"
 
 Player::Player(int posX, int posY)
-    : _positionX(posX), _positionY(posY)
+    : _positionX(posX)
+    , _positionY(posY)
 {
-    _sprite = Texture("../img/player.png", 256, 256, 80, 80, _positionX, _positionY);
+    _sprite = Animation("../img/pirate.png", 192, 32, 32, posX, posY);
 }
 
 void Player::Move(Direction direction)
 {
-    switch (direction)
-    {
+    switch (direction) {
     case UP:
         _positionY -= CELLSIZE;
         break;
