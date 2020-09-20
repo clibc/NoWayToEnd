@@ -4,6 +4,7 @@ Time *Time::_instance = nullptr;
 float Time::_deltaTime;
 
 Time::Time()
+:_firstTime(0.0f)
 {
 }
 

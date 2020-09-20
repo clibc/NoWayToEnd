@@ -1,4 +1,5 @@
 #include "animation.h"
+#include <cstring>
 
 Animation::Animation(const char* path, int imageSizeW,
     int imageSizeH, int frameSize, int posX, int posY)
@@ -29,13 +30,12 @@ Animation::Animation(const char* path, int imageSizeW,
 void Animation::Play()
 {
     SDL_Rect* currentClip = &_srcRectsH[(int)_frame];
-
     _renderer->RenderAnimationFrame(_texture, currentClip, &_destRect);
 
     // TODO: Calculate the proper value
     _frame += Time::DeltaTime() * _frameCount;
-    if (_frame >= (float)_frameCount)
-        _frame = 0;
+    if (_frame >= (float)_frameCount-1)
+       _frame = 0;
 }
 
 void Animation::operator=(const Animation& other)
