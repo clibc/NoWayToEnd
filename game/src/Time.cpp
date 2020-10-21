@@ -1,13 +1,13 @@
 #include "time.h"
 
-Time *Time::_instance = nullptr;
+Time* Time::_instance = nullptr;
 float Time::_deltaTime;
 
 Time::Time()
 {
 }
 
-Time *Time::GetInstance()
+Time* Time::GetInstance()
 {
     if (_instance == nullptr)
         _instance = new Time();
