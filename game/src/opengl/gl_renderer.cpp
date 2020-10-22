@@ -1,7 +1,10 @@
 #include "gl_renderer.h"
 
+gl_renderer *gl_renderer::m_instance = nullptr;
+
 void gl_renderer::Init()
 {
+    m_instance = this;
     // NOTE : SDL shoud already be initialized!
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);

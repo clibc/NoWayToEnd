@@ -8,7 +8,8 @@ class gl_renderer
 {
 public:
     void Init();
-    void Render(); //take the shader and VB as parameters
+    void Render();
+    void SetViewPort(float x, float y);
 
 private:
     static gl_renderer *m_instance;

@@ -1,4 +1,5 @@
 #pragma once
+#include "Time.h"
 #include "animation.h"
 #include "gameDefines.h"
 #include "level.h"
@@ -6,12 +7,12 @@
 #include "renderer.h"
 #include "text.h"
 #include "texture.h"
-#include "time.h"
 #include "utils.h"
 #include "vector"
 #include <iostream>
 
-enum GameState {
+enum GameState
+{
     RUNNING,
     PLAYERWIN,
     PLAYERLOSE,
@@ -19,7 +20,8 @@ enum GameState {
     QUIT
 };
 
-class Game {
+class Game
+{
 public:
     Game();
     ~Game();
@@ -36,7 +38,7 @@ private:
     Texture _wall;
     GameState _state;
     int _gridSizeforOneUnit;
-    Renderer* _renderer;
+    Renderer *_renderer;
     bool _run;
     Level _level;
     Text _text;
@@ -46,5 +48,5 @@ private:
     std::vector<Line> _lines;
     std::string _positionText;
 
-    Time* _time;
+    Time *_time;
 };
