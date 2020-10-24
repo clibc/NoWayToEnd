@@ -41,152 +41,152 @@ void Game::Update()
             break;
         }
     }
-
-    void Game::Render()
+}
+void Game::Render()
+{
+    _renderer->Begin();
     {
-        _renderer->Begin();
-        {
-            //_renderer->RenderTexture(_player.GetRenderData());
-            _player.GetAnim()->Play();
+        //_renderer->RenderTexture(_player.GetRenderData());
+        _player.GetAnim()->Play();
 
-            PassLevelDataToRenderer(_level);
-            for (Line line : _lines)
-            {
-                _renderer->DrawLine(line);
-            }
-            _renderer->RenderTextTexture(&_text);
+        PassLevelDataToRenderer(_level);
+        for (Line line : _lines)
+        {
+            _renderer->DrawLine(line);
         }
-        _renderer->End();
+        _renderer->RenderTextTexture(&_text);
     }
+    _renderer->End();
+}
 
-    void Game::Init()
+void Game::Init()
+{
+    _time = Time::GetInstance();
+    _wall = Texture("../img/wall.png", 256, 256, 80, 80, 0, 0);
+    _coin = Animation("../img/coin2.png", 192, 32, 32, _level._gatePosX, _level._gatePosY);
+
+    _player = Player(_level._playerPosX, _level._playerPosY);
+    _text = Text("Player position :", {255, 255, 255, 255}, 25, 0, 0);
+
+    UpdateGameText();
+    for (int i = 1; i < _gridSizeforOneUnit; i++)
     {
-        _time = Time::GetInstance();
-        _wall = Texture("../img/wall.png", 256, 256, 80, 80, 0, 0);
-        _coin = Animation("../img/coin2.png", 192, 32, 32, _level._gatePosX, _level._gatePosY);
+        int position = i * CELLSIZE;
+        Line line1(position, 0, position, 800);
+        Line line2(0, position, 800, position);
 
-        _player = Player(_level._playerPosX, _level._playerPosY);
-        _text = Text("Player position :", {255, 255, 255, 255}, 25, 0, 0);
-
-        UpdateGameText();
-        IsMovementPossible for (int i = 1; i < _gridSizeforOneUnit; i++)
-        {
-            int position = i * CELLSIZE;
-            Line line1(position, 0, position, 800);
-            Line line2(0, position, 800, position);
-
-            _lines.push_back(line1);
-            _lines.push_back(line2);
-        }
+        _lines.push_back(line1);
+        _lines.push_back(line2);
     }
+}
 
-    void Game::HandleInput()
+void Game::HandleInput()
+{
+    SDL_Event e;
+    if (SDL_PollEvent(&e))
     {
-        SDL_Event e;
-        if (SDL_PollEvent(&e))
+        switch (e.type)
         {
-            switch (e.type)
+        case SDL_QUIT:
+            _state = QUIT;
+            break;
+        case SDL_KEYDOWN:
+            switch (e.key.keysym.sym)
             {
-            case SDL_QUIT:
+            case SDLK_a:
+                if ((LEFT))
+                    _player.Move(LEFT);
+                break;
+            case SDLK_d:
+                if (IsMovementPossible(RIGHT))
+                    _player.Move(RIGHT);
+                break;
+            case SDLK_w:
+                if (IsMovementPossible(UP))
+                    _player.Move(UP);
+                break;
+            case SDLK_s:
+                if (IsMovementPossible(DOWN))
+                    _player.Move(DOWN);
+                break;
+            case SDLK_ESCAPE:
                 _state = QUIT;
-                break;
-            case SDL_KEYDOWN:
-                switch (e.key.keysym.sym)
-                {
-                case SDLK_a:
-                    if ((LEFT))
-                        _player.Move(LEFT);
-                    break;
-                case SDLK_d:
-                    if (IsMovementPossible(RIGHT))
-                        _player.Move(RIGHT);
-                    break;
-                case SDLK_w:
-                    if (IsMovementPossible(UP))
-                        _player.Move(UP);
-                    break;
-                case SDLK_s:
-                    if (IsMovementPossible(DOWN))
-                        _player.Move(DOWN);
-                    break;
-                case SDLK_ESCAPE:
-                    _state = QUIT;
 
-                default:
-                    break;
-                }
-                UpdateGameText();
-                break;
             default:
                 break;
             }
-        }
-    }
-
-    void Game::PassLevelDataToRenderer(Level level)
-    {
-        //TODO : Find an algorithm to find proper position to render the wall.
-
-        int row;
-        int column;
-
-        for (int i = 0; i < 100; i++)
-        {
-            switch (_level._blocks[i])
-            {
-            case Empty:
-                //clean code :)
-                break;
-            case Wall:
-                row = i / COLUMNCOUNT;
-                column = i % ROWCOUNT;
-                _wall.ChangePositionOnScreen(column * CELLSIZE, row * CELLSIZE);
-                _renderer->RenderTexture(&_wall);
-                break;
-            case Gate:
-                _coin.Play();
-                break;
-            default:
-                break;
-            }
-        }
-    }
-
-    bool Game::IsMovementPossible(Direction dir)
-    {
-        int tempX = _player._positionX;
-        int tempY = _player._positionY;
-
-        switch (dir)
-        {
-        case UP:
-            tempY -= CELLSIZE;
-            break;
-        case DOWN:
-            tempY += CELLSIZE;
-            break;
-        case RIGHT:
-            tempX += CELLSIZE;
-            break;
-        case LEFT:
-            tempX -= CELLSIZE;
+            UpdateGameText();
             break;
         default:
             break;
         }
-        int col = tempX / CELLSIZE;
-        int row = tempY / CELLSIZE;
-
-        int index = (row * COLUMNCOUNT + col);
-
-        if (_level._blocks[index] != Wall && ((tempX >= 0 && tempX < WIN_W) && (tempY >= 0 && tempY < WIN_H)))
-            return true;
-        else
-            return false;
     }
+}
 
-    void Game::UpdateGameText()
+void Game::PassLevelDataToRenderer(Level level)
+{
+    //TODO : Find an algorithm to find proper position to render the wall.
+
+    int row;
+    int column;
+
+    for (int i = 0; i < 100; i++)
     {
-        _positionText = "Player's Position : " + std::to_string(_player._positionX) + "," + std::to_string(_player._positionY);
-        _text.ChangeContext(_positionText.c_str());
+        switch (_level._blocks[i])
+        {
+        case Empty:
+            //clean code :)
+            break;
+        case Wall:
+            row = i / COLUMNCOUNT;
+            column = i % ROWCOUNT;
+            _wall.ChangePositionOnScreen(column * CELLSIZE, row * CELLSIZE);
+            _renderer->RenderTexture(&_wall);
+            break;
+        case Gate:
+            _coin.Play();
+            break;
+        default:
+            break;
+        }
     }
+}
+
+bool Game::IsMovementPossible(Direction dir)
+{
+    int tempX = _player._positionX;
+    int tempY = _player._positionY;
+
+    switch (dir)
+    {
+    case UP:
+        tempY -= CELLSIZE;
+        break;
+    case DOWN:
+        tempY += CELLSIZE;
+        break;
+    case RIGHT:
+        tempX += CELLSIZE;
+        break;
+    case LEFT:
+        tempX -= CELLSIZE;
+        break;
+    default:
+        break;
+    }
+    int col = tempX / CELLSIZE;
+    int row = tempY / CELLSIZE;
+
+    int index = (row * COLUMNCOUNT + col);
+
+    if (_level._blocks[index] != Wall && ((tempX >= 0 && tempX < WIN_W) && (tempY >= 0 && tempY < WIN_H)))
+        return true;
+    else
+        return false;
+}
+
+void Game::UpdateGameText()
+{
+    _positionText = "Player's Position : " + std::to_string(_player._positionX) + "," + std::to_string(_player._positionY);
+    _text.ChangeContext(_positionText.c_str());
+}
