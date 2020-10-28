@@ -1,15 +1,22 @@
+#pragma once
 #include "gl/glew.h"
 #include <vector>
 
-class gl_vertexBuffer
+namespace ogl
 {
-public:
-    gl_vertexBuffer(std::vector<uint32_t> &indices);
-    void SetVertexAttribArray(GLuint index, GLuint size, size_t stride, const GLvoid *pointer);
-    void inline Bind() { glBindBuffer(GL_ARRAY_BUFFER, m_bufferID); }
-    void inline Unbind() { glBindBuffer(GL_ARRAY_BUFFER, m_bufferID); };
+    class vertexBuffer
+    {
+    public:
+        vertexBuffer() = default;
+        vertexBuffer(std::vector<float> &indices);
+        void SetVertexAttribArray(GLuint index, GLuint size, size_t stride, const GLvoid *pointer);
+        void inline Bind() { glBindBuffer(GL_ARRAY_BUFFER, m_bufferID); }
+        void inline Unbind() { glBindBuffer(GL_ARRAY_BUFFER, m_bufferID); };
 
-private:
-    GLuint m_bufferID;
-    std::vector<uint32_t> *m_indices;
-};
+        int32_t m_numVertices;
+
+    private:
+        GLuint m_bufferID;
+        std::vector<float> *m_indices;
+    };
+}; // namespace ogl

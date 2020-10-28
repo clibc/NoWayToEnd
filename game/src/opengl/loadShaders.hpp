@@ -1,13 +1,13 @@
 #pragma once
-#include <GL/glew.h>
-#include <iostream>
+#include "GL/glew.h"
 #include <fstream>
+#include <iostream>
 #include <sstream>
 #include <vector>
 
 #define debug(x) std::cout << x << "\n";
 
-GLuint LoadShaders(const char *vs, const char *fs)
+static GLuint LoadShaders(const char *vs, const char *fs)
 {
     GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
     GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);

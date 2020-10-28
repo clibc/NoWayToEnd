@@ -3,14 +3,31 @@
 #include "SDL.h"
 #include "gameDefines.h"
 #include "glm/glm.hpp"
+#include "opengl/gl_shader.h"
+#include "opengl/gl_vertexBuffer.h"
+#include <iostream>
 
-class gl_renderer
+namespace ogl
 {
-public:
-    void Init();
-    void Render();
-    void SetViewPort(float x, float y);
+    class renderer
+    {
+    public:
+        renderer() = default;
+        renderer(SDL_Window *window);
+        static inline renderer *GetInstance() { return m_instance; }
+        void Render();
+        void Render(ogl::vertexBuffer vb, ogl::shader shader);
+        void SetViewPort(float x, float y);
+        void RenderCube(float width, float height);
+        void Clear();
+        void SwapBuffers();
 
-private:
-    static gl_renderer *m_instance;
-};
+    private:
+        void Init();
+        SDL_Window *m_window;
+        static renderer *m_instance;
+        shader m_defShader;
+        glm::mat4 m_ortho;
+        glm::mat4 m_view;
+    };
+}; // namespace ogl

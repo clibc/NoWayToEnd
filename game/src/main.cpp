@@ -1,32 +1,27 @@
 #include "SDL.h"
 #include "game.h"
-
+#include "opengl/gl_renderer.h"
 int main(int argc, char *args[])
 {
 
-    if (SDL_Init(SDL_INIT_VIDEO))
+    if (SDL_Init(SDL_INIT_EVERYTHING))
         std::cout << "Initializatin failed!"
                   << "\n";
-
-    TTF_Init();
-    IMG_Init(IMG_INIT_PNG);
-
     SDL_Window *window;
-    window = SDL_CreateWindow("Sdl window",
+    window = SDL_CreateWindow("NWTE",
                               SDL_WINDOWPOS_CENTERED,
                               SDL_WINDOWPOS_CENTERED,
                               WIN_W, WIN_H,
-                              SDL_WINDOW_SHOWN);
+                              SDL_WINDOW_OPENGL);
 
-    Renderer renderer(window);
-    Game myGame;
+    SDL_GL_CreateContext(window);
 
-    myGame.Update();
+    ogl::renderer renderer(window);
+    Game game;
+    game.Run();
 
     SDL_DestroyWindow(window);
 
-    IMG_Quit();
-    TTF_Quit();
     SDL_Quit();
 
     return 0;
