@@ -15,14 +15,18 @@ namespace ogl
         glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
     }
 
-    void shader::SetUniform1f(GLuint loc, float value)
+    void shader::SetUniform1f(const char *name, float value)
     {
+        glUseProgram(m_shaderProgram);
+        GLint loc = glGetUniformLocation(m_shaderProgram, name);
         glUniform1f(loc, value);
     }
 
-    void shader::SetUniform3fv(GLuint loc, glm::vec3 vector)
+    void shader::SetUniform3fv(const char *name, glm::vec3 vector)
     {
-        glUniform3fv(loc, 3, glm::value_ptr(vector));
+        glUseProgram(m_shaderProgram);
+        GLint loc = glGetUniformLocation(m_shaderProgram, name);
+        glUniform3f(loc, vector.x, vector.y, vector.z);
     }
 
 }; // namespace ogl

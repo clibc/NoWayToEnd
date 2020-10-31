@@ -31,16 +31,11 @@ namespace ogl
             DEBUG("Error: " << glewGetErrorString(err));
     }
 
-    void renderer::RenderCube(float width, float height)
-    {
-        m_defShader.Bind();
-    }
-
-    void renderer::Render(ogl::vertexBuffer vb, ogl::shader shader)
+    void renderer::RenderQuad(ogl::vertexBuffer vb, ogl::shader shader)
     {
         shader.Bind();
         vb.Bind();
-        glDrawArrays(GL_QUADS, 0, vb.m_numVertices);
+        glDrawArrays(GL_QUADS, 0, 4);
     }
 
     void renderer::Clear()
@@ -52,6 +47,11 @@ namespace ogl
     void renderer::SwapBuffers()
     {
         SDL_GL_SwapWindow(m_window);
+    }
+
+    void renderer::SetViewPort(int x, int y)
+    {
+        glViewport(0, 0, x, y);
     }
 
 }; // namespace ogl
