@@ -40,7 +40,6 @@ namespace ogl
     {
         shader.Bind();
         vb.Bind();
-        std::cout << "this" << '\n';
         glDrawArrays(GL_QUADS, 0, vb.m_numVertices);
     }
 
@@ -54,4 +53,5 @@ namespace ogl
     {
         SDL_GL_SwapWindow(m_window);
     }
+
 }; // namespace ogl

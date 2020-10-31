@@ -16,6 +16,8 @@ int main(int argc, char *args[])
 
     SDL_GL_CreateContext(window);
 
+    DEBUG("init");
+
     ogl::renderer renderer(window);
     Game game;
     game.Run();

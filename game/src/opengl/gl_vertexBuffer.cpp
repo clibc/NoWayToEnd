@@ -16,4 +16,4 @@ namespace ogl
         glVertexAttribPointer(index, size, GL_FLOAT, GL_FALSE, stride, pointer);
         glEnableVertexAttribArray(index);
     }
-}; 
+};

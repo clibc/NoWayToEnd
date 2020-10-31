@@ -30,4 +30,5 @@ namespace ogl
         glm::mat4 m_ortho;
         glm::mat4 m_view;
     };
+
 }; // namespace ogl

@@ -3,6 +3,7 @@
 #include "opengl/gl_shader.h"
 #include "opengl/gl_vertexBuffer.h"
 #include <vector>
+#include "glm/glm.hpp"
 
 class Game
 {
