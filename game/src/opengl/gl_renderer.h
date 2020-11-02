@@ -16,7 +16,8 @@ namespace ogl
         renderer(SDL_Window *window);
         static inline renderer *GetInstance() { return m_instance; }
         void Render();
-        void RenderQuad(ogl::vertexBuffer vb, ogl::shader shader);
+        void RenderQuad(ogl::vertexBuffer &vb, ogl::shader &shader);
+        void RenderTriangle(ogl::vertexBuffer &vb, ogl::shader &shader);
         void SetViewPort(int x, int y);
         void Clear();
         void SwapBuffers();

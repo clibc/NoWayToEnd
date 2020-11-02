@@ -1,8 +1,11 @@
 #version 330 core
 
-in vec3 theColor;
+in vec3 textureCoord;
 out vec3 color;
 
-void main(void) {
-    color = theColor;
+uniform sempler2D myTexture;
+
+void main(void)
+{
+    FragColor = texture(myTexture, textureCoord);
 }

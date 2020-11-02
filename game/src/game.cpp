@@ -5,23 +5,26 @@ Game::Game()
     m_renderer = ogl::renderer::GetInstance();
     m_renderer->SetViewPort(WIN_W, WIN_H);
 
-    static GLfloat g_vertex_buffer_data[] = {
-        -0.5f, 0.5f, 0.0f, // Top-left
-        0.5f, 0.5f, 0.0f,  // Top-right
-        0.5f, -0.5f, 0.0f, // Bottom-right
-        -0.5f, -0.5f, 0.0f};
-
-    for (int i = 0; i < sizeof(g_vertex_buffer_data); ++i)
-    {
-        m_vertices.push_back(g_vertex_buffer_data[i]);
-    }
+    static GLfloat vertices[] = {
+        // positions      // texture coords
+        0.5f, 0.5f, 0.0f, 1.0f, 1.0f,   // top right
+        0.5f, -0.5f, 0.0f, 1.0f, 0.0f,  // bottom right
+        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // bottom left
+        -0.5f, 0.5f, 0.0f, 0.0f, 1.0f   // top left
+    };
 
     m_shader = ogl::shader("C:/Users/root/Desktop/sdl_game/game/src/opengl/shaders/vertex.vs",
                            "C:/Users/root/Desktop/sdl_game/game/src/opengl/shaders/fragment.vs");
-    m_vb = ogl::vertexBuffer(m_vertices);
-    m_vb.SetVertexAttribArray(0, 3, 0, 0);
+
+    m_vb = ogl::vertexBuffer(&vertices[0], sizeof(vertices));
+    m_vb.SetVertexAttribArray(0, 3, 3 * sizeof(GLfloat), 0);
+    m_vb.SetVertexAttribArray(0, 2, 0, (void *)(5 * sizeof(GLfloat)));
 
     m_shader.SetUniform3fv("color", glm::vec3(1.0f, 0.0f, 0.0f));
+
+    static float tempCoords[] = {
+        1.0f, 1.0f};
+    m_texture = ogl::texture("texture.jpg", &tempCoords[0]);
 }
 
 Game::~Game()
@@ -65,7 +68,7 @@ void Game::Run()
 
         //test
         m_renderer->Clear();
-        m_renderer->RenderQuad(m_vb, m_shader);
+        m_renderer->RenderTriangle(m_vb, m_shader);
         m_renderer->SwapBuffers();
     }
 }

@@ -31,11 +31,18 @@ namespace ogl
             DEBUG("Error: " << glewGetErrorString(err));
     }
 
-    void renderer::RenderQuad(ogl::vertexBuffer vb, ogl::shader shader)
+    void renderer::RenderQuad(ogl::vertexBuffer &vb, ogl::shader &shader)
     {
         shader.Bind();
         vb.Bind();
         glDrawArrays(GL_QUADS, 0, 4);
+    }
+
+    void renderer::RenderTriangle(ogl::vertexBuffer &vb, ogl::shader &shader)
+    {
+        shader.Bind();
+        vb.Bind();
+        glDrawArrays(GL_TRIANGLES, 0, 3);
     }
 
     void renderer::Clear()

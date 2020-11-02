@@ -52,6 +52,7 @@ void Animation::operator=(const Animation &other)
 void Animation::ChangePositionOnScreen(int x, int y)
 {
     _destRect.x = x;
+
     _destRect.y = y;
 }
 
