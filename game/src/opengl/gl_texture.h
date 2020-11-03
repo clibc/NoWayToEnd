@@ -8,11 +8,11 @@ namespace ogl
 {
     class texture
     {
-    public:
+        public:
         texture() = default;
         texture(const char *texturePath, const float *coords);
-
-    private:
+        
+        private:
         const float *m_textureCoords;
         int m_width;
         int m_height;

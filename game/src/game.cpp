@@ -17,14 +17,14 @@ Game::Game()
                            "C:/Users/root/Desktop/sdl_game/game/src/opengl/shaders/fragment.vs");
 
     m_vb = ogl::vertexBuffer(&vertices[0], sizeof(vertices));
-    m_vb.SetVertexAttribArray(0, 3, 3 * sizeof(GLfloat), 0);
-    m_vb.SetVertexAttribArray(0, 2, 0, (void *)(5 * sizeof(GLfloat)));
+    m_vb.SetVertexAttribArray(0, 3, 5 * sizeof(GLfloat), 0);
+    m_vb.SetVertexAttribArray(1, 2, 5 * sizeof(GLfloat), (void *)(3 * sizeof(GLfloat)));
 
     m_shader.SetUniform3fv("color", glm::vec3(1.0f, 0.0f, 0.0f));
 
     static float tempCoords[] = {
         1.0f, 1.0f};
-    m_texture = ogl::texture("texture.jpg", &tempCoords[0]);
+    m_texture = ogl::texture("texture1.jpg", &tempCoords[0]);
 }
 
 Game::~Game()
@@ -68,7 +68,7 @@ void Game::Run()
 
         //test
         m_renderer->Clear();
-        m_renderer->RenderTriangle(m_vb, m_shader);
+        m_renderer->RenderQuad(m_vb, m_shader);
         m_renderer->SwapBuffers();
     }
 }

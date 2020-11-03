@@ -8,7 +8,7 @@ namespace ogl
 {
     class shader
     {
-    public:
+        public:
         shader() = default;
         shader(const char *vsPath, const char *fsPath);
         inline void Bind() { glUseProgram(m_shaderProgram); }
@@ -16,8 +16,9 @@ namespace ogl
         void SetUniform1f(const char *name, float value);
         void SetUniform3fv(const char *name, glm::vec3 vector);
         inline GLint GetUniformLocation(const char *name) { return glGetUniformLocation(m_shaderProgram, name); }
-
-    private:
+        inline GLuint GetProgram() { return m_shaderProgram; }
+        
+        private:
         GLuint m_shaderProgram;
     };
 }; // namespace ogl
