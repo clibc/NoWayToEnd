@@ -13,8 +13,8 @@ Game::Game()
         -0.5f, 0.5f, 0.0f, 0.0f, 1.0f   // top left
     };
 
-    m_shader = ogl::shader("C:/Users/root/Desktop/sdl_game/game/src/opengl/shaders/vertex.vs",
-                           "C:/Users/root/Desktop/sdl_game/game/src/opengl/shaders/fragment.vs");
+    m_shader = ogl::shader("/home/eax/Desktop/sdl_game/game/src/opengl/shaders/vertex.vs",
+                           "/home/eax/Desktop/sdl_game/game/src/opengl/shaders/fragment.vs");
 
     m_vb = ogl::vertexBuffer(&vertices[0], sizeof(vertices));
     m_vb.SetVertexAttribArray(0, 3, 5 * sizeof(GLfloat), 0);
@@ -24,7 +24,8 @@ Game::Game()
 
     static float tempCoords[] = {
         1.0f, 1.0f};
-    m_texture = ogl::texture("texture1.jpg", &tempCoords[0]);
+    m_texture = ogl::texture("/home/eax/Desktop/sdl_game/game/img/texture1.jpg",
+                             &tempCoords[0]);
 }
 
 Game::~Game()
@@ -52,7 +53,6 @@ void Game::Run()
                     return;
                 }
                 break;
-
             case SDL_WINDOWEVENT:
                 if (e.window.event == SDL_WINDOWEVENT_CLOSE)
                 {

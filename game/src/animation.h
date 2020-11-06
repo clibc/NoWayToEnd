@@ -1,6 +1,7 @@
 #pragma once
 #include "renderer.h"
 #include "time.h"
+#include <cstring>
 
 #define FRAMECOUNT 5
 #define ANIMDELAY 50
