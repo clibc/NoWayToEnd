@@ -9,12 +9,16 @@ namespace ogl
     {
         if (m_instance == nullptr)
             m_instance = this;
+
+        m_ortho = glm::ortho(0.0f, (float)WIN_W, 0.0f, (float)WIN_H, -1.0f, 1.0f);
+        m_view = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0));
+
+        m_mvp = m_ortho * m_view;
         Init();
     }
 
     void renderer::Init()
     {
-
         // NOTE(62bit): SDL shoud already be initialized!
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
         SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);

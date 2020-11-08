@@ -29,6 +29,9 @@ namespace ogl
         shader m_defShader;
         glm::mat4 m_ortho;
         glm::mat4 m_view;
+
+    public:
+        glm::mat4 m_mvp;
     };
 
 }; // namespace ogl

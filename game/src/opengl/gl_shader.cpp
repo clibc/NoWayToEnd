@@ -29,4 +29,11 @@ namespace ogl
         glUniform3f(loc, vector.x, vector.y, vector.z);
     }
 
+    void shader::SetUniformMat4f(const char *name, glm::mat4 matrix)
+    {
+        glUseProgram(m_shaderProgram);
+        GLint loc = glGetUniformLocation(m_shaderProgram, name);
+        glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(matrix));
+    }
+
 }; // namespace ogl

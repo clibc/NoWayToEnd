@@ -20,11 +20,18 @@ Game::Game()
     m_vb.SetVertexAttribArray(0, 3, 5 * sizeof(GLfloat), 0);
     m_vb.SetVertexAttribArray(1, 2, 5 * sizeof(GLfloat), (void *)(3 * sizeof(GLfloat)));
 
+    glm::mat4 model = glm::translate(glm::mat4(1.0f),
+                                     glm::vec3(0 + CELLSIZE / 2,
+                                               WIN_H - CELLSIZE / 2, 0.0f));
+    model = glm::scale(model, glm::vec3(CELLSIZE, CELLSIZE, 0));
+
     m_shader.SetUniform3fv("color", glm::vec3(1.0f, 0.0f, 0.0f));
+    m_shader.SetUniformMat4f("mvp", m_renderer->m_mvp);
+    m_shader.SetUniformMat4f("model", model);
 
     static float tempCoords[] = {
         1.0f, 1.0f};
-    m_texture = ogl::texture("/home/eax/Desktop/sdl_game/game/img/texture1.jpg",
+    m_texture = ogl::texture("wall.png",
                              &tempCoords[0]);
 }
 
