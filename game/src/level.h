@@ -13,6 +13,7 @@ class Level
 {
 
 public:
+    Level() = default;
     Level(const char *filepath)
     {
         LoadLevel(filepath, _blocks);

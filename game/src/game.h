@@ -5,12 +5,14 @@
 #include "opengl/gl_texture.h"
 #include <vector>
 #include "glm/glm.hpp"
+#include "level.h"
 
 class Game
 {
 public:
     Game();
     ~Game();
+    void RenderLevel();
     void Run();
 
 private:
@@ -19,4 +21,5 @@ private:
     ogl::vertexBuffer m_vb;
     ogl::texture m_texture;
     std::vector<float> m_vertices;
+    Level m_level;
 };

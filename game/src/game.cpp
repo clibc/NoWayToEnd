@@ -5,6 +5,8 @@ Game::Game()
     m_renderer = ogl::renderer::GetInstance();
     m_renderer->SetViewPort(WIN_W, WIN_H);
 
+    m_level = Level("../levels/level1.lvl");
+
     static GLfloat vertices[] = {
         // positions      // texture coords
         0.5f, 0.5f, 0.0f, 1.0f, 1.0f,   // top right
@@ -13,8 +15,8 @@ Game::Game()
         -0.5f, 0.5f, 0.0f, 0.0f, 1.0f   // top left
     };
 
-    m_shader = ogl::shader("/home/eax/Desktop/sdl_game/game/src/opengl/shaders/vertex.vs",
-                           "/home/eax/Desktop/sdl_game/game/src/opengl/shaders/fragment.vs");
+    m_shader = ogl::shader("../src/opengl/shaders/vertex.vs",
+                           "../src/opengl/shaders/fragment.vs");
 
     m_vb = ogl::vertexBuffer(&vertices[0], sizeof(vertices));
     m_vb.SetVertexAttribArray(0, 3, 5 * sizeof(GLfloat), 0);
@@ -73,9 +75,34 @@ void Game::Run()
             }
         }
 
+        RenderLevel();
         //test
         m_renderer->Clear();
         m_renderer->RenderQuad(m_vb, m_shader);
         m_renderer->SwapBuffers();
+    }
+}
+
+void Game::RenderLevel()
+{
+    for (int i = 0; i < m_level._blocks.size(); ++i)
+    {
+        switch (m_level._blocks[i])
+        {
+        case Wall:
+            DEBUG("this is wall");
+            break;
+        case Empty:
+            DEBUG("this is empty");
+            break;
+        case Gate:
+            DEBUG("this is gate");
+            break;
+        case PlayerLoc:
+            DEBUG("this is player");
+            break;
+        default:
+            break;
+        }
     }
 }
