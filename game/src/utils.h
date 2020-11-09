@@ -1,6 +1,6 @@
 #pragma once
-#include <iostream>
-
+#include "gameDefines.h"
+#include "glm/glm.hpp"
 struct Line
 {
     int _x1;
@@ -28,3 +28,10 @@ struct DrawColor
 
     DrawColor() = default;
 };
+
+inline glm::vec2 ConvertToPos(int row, int column)
+{
+    float x, y;
+    // TODO(62bit): Convert bottom left 0,0 to top left 0,0
+    return glm::vec2(1.0f);
+}

@@ -23,8 +23,8 @@ Game::Game()
     m_vb.SetVertexAttribArray(1, 2, 5 * sizeof(GLfloat), (void *)(3 * sizeof(GLfloat)));
 
     glm::mat4 model = glm::translate(glm::mat4(1.0f),
-                                     glm::vec3(0 + CELLSIZE / 2,
-                                               WIN_H - CELLSIZE / 2, 0.0f));
+                                     glm::vec3(50.0f,
+                                               50.0f, 0.0f));
     model = glm::scale(model, glm::vec3(CELLSIZE, CELLSIZE, 0));
 
     m_shader.SetUniform3fv("color", glm::vec3(1.0f, 0.0f, 0.0f));
@@ -75,34 +75,46 @@ void Game::Run()
             }
         }
 
-        RenderLevel();
-        //test
         m_renderer->Clear();
-        m_renderer->RenderQuad(m_vb, m_shader);
+        RenderLevel();
         m_renderer->SwapBuffers();
     }
 }
 
 void Game::RenderLevel()
 {
+    // TODO(62bit): Draw these in the right order
+    float row, column;
+    glm::vec2 pos;
     for (int i = 0; i < m_level._blocks.size(); ++i)
     {
         switch (m_level._blocks[i])
         {
         case Wall:
-            DEBUG("this is wall");
+            row = i / COLUMNCOUNT;
+            column = i % ROWCOUNT;
+            pos = ConvertToPos(row, column);
+            RenderCubeAtPosition((row * CELLSIZE / 2),
+                                 (800 - (column * CELLSIZE / 2)));
             break;
         case Empty:
-            DEBUG("this is empty");
             break;
         case Gate:
-            DEBUG("this is gate");
             break;
         case PlayerLoc:
-            DEBUG("this is player");
             break;
         default:
             break;
         }
     }
+}
+
+void Game::RenderCubeAtPosition(float x, float y)
+{
+    glm::mat4 model = glm::translate(glm::mat4(1.0f),
+                                     glm::vec3(x, y, 0.0f));
+    model = glm::scale(model, glm::vec3(CELLSIZE, CELLSIZE, 0));
+
+    m_shader.SetUniformMat4f("model", model);
+    m_renderer->RenderQuad(m_vb, m_shader);
 }

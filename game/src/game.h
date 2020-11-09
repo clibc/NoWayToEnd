@@ -1,11 +1,12 @@
 #pragma once
-#include "opengl/gl_renderer.h"
-#include "opengl/gl_shader.h"
-#include "opengl/gl_vertexBuffer.h"
-#include "opengl/gl_texture.h"
-#include <vector>
 #include "glm/glm.hpp"
 #include "level.h"
+#include "opengl/gl_renderer.h"
+#include "opengl/gl_shader.h"
+#include "opengl/gl_texture.h"
+#include "opengl/gl_vertexBuffer.h"
+#include "utils.h"
+#include <vector>
 
 class Game
 {
@@ -13,6 +14,7 @@ public:
     Game();
     ~Game();
     void RenderLevel();
+    void RenderCubeAtPosition(float x, float y);
     void Run();
 
 private:
