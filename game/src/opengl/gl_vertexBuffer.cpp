@@ -3,7 +3,7 @@
 namespace ogl
 {
     vertexBuffer::vertexBuffer(std::vector<float> &indices)
-        : m_indices(indices), m_numVertices(indices.size())
+        : m_numVertices(indices.size()), m_indices(indices)
     {
 
         glCreateBuffers(1, &m_bufferID);
@@ -12,7 +12,7 @@ namespace ogl
     }
 
     vertexBuffer::vertexBuffer(float *indices, int size)
-        : m_posArray(indices), m_numVertices(size)
+        : m_numVertices(size), m_posArray(indices)
     {
 
         glCreateBuffers(1, &m_bufferID);

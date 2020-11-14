@@ -1,6 +1,6 @@
 #!/bin/bash
 
-flags="-g -O0"
+flags="-g -O0 -Wall"
 includes="-I /home/eax/Desktop/sdl_game/game/Dependencies/ \
 	  -I /home/eax/Desktop/sdl_game/game/Dependencies/SDL2/include/ \
 	  -I /home/eax/Desktop/sdl_game/game/Dependencies/SDL2_image/include \

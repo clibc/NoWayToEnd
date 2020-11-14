@@ -7,7 +7,7 @@
 
 #define debug(x) std::cout << x << "\n";
 
-static GLuint LoadShaders(const char *vs, const char *fs)
+inline GLuint LoadShaders(const char *vs, const char *fs)
 {
     GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
     GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);

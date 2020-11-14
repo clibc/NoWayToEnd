@@ -1,6 +1,7 @@
 #pragma once
 #include "gameDefines.h"
 #include "glm/glm.hpp"
+
 struct Line
 {
     int _x1;
@@ -29,9 +30,17 @@ struct DrawColor
     DrawColor() = default;
 };
 
-inline glm::vec2 ConvertToPos(int row, int column)
+inline void ConvertToPos(glm::vec2 *vector, int row, int column)
 {
+    // NOTE(62bit): Takes row and column values and
+    // returns center position of cell.
     float x, y;
-    // TODO(62bit): Convert bottom left 0,0 to top left 0,0
-    return glm::vec2(1.0f);
+
+    x = (column * CELLSIZE) + (CELLSIZE / 2);
+    y = (row * CELLSIZE) + (CELLSIZE / 2);
+
+    y = 800 - y;
+
+    vector->x = x;
+    vector->y = y;
 }

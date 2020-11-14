@@ -74,7 +74,6 @@ void Game::Run()
                 break;
             }
         }
-
         m_renderer->Clear();
         RenderLevel();
         m_renderer->SwapBuffers();
@@ -84,19 +83,19 @@ void Game::Run()
 void Game::RenderLevel()
 {
     // TODO(62bit): Draw these in the right order
-    float row, column;
-    glm::vec2 pos;
     for (int i = 0; i < m_level._blocks.size(); ++i)
     {
         switch (m_level._blocks[i])
         {
         case Wall:
-            row = i / COLUMNCOUNT;
-            column = i % ROWCOUNT;
-            pos = ConvertToPos(row, column);
-            RenderCubeAtPosition((row * CELLSIZE / 2),
-                                 (800 - (column * CELLSIZE / 2)));
-            break;
+        {
+            glm::vec2 pos;
+            float row = i / COLUMNCOUNT;
+            float column = i % ROWCOUNT;
+            ConvertToPos(&pos, row, column);
+            RenderCubeAtPosition(pos.x, pos.y);
+        }
+        break;
         case Empty:
             break;
         case Gate:
