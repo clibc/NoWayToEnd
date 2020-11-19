@@ -1,0 +1,106 @@
+#include <iostream>
+#include "SDL.h"
+#include "GL\glew.h"
+#include "common.h"
+#include "renderer.h"
+#include "shader.h"
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
+int main(int argc, char *args[])
+{
+    SDL_Init(SDL_INIT_EVERYTHING);
+    SDL_Window *window = SDL_CreateWindow("nwte",
+                                          SDL_WINDOWPOS_CENTERED,
+                                          SDL_WINDOWPOS_CENTERED,
+                                          WINDOW_WIDTH,
+                                          WINDOW_HEIGHT,
+                                          SDL_WINDOW_OPENGL);
+    SDL_GL_CreateContext(window);
+
+    SetAttribs();
+
+    GLenum error = glewInit();
+    if (error != GLEW_OK)
+    {
+        printf("%s", glewGetErrorString(error));
+        return 1;
+    }
+
+    float vertices[] =
+        {//                  texture coords
+         -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+         0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+         0.0f, 0.5f, 0.0f, 0.5f, 1.0f};
+
+    unsigned int VBO;
+    glGenBuffers(1, &VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    shader mShader = CreateShader("../code/shaders/vertex.vs",
+                                  "../code/shaders/fragment.vs");
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
+                          (void *)0);
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
+                          (void *)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    // NOTE(62bit): Texture
+    int width, height, nrChannels;
+    unsigned char *data = stbi_load("../assets/texture.jpg",
+                                    &width, &height, &nrChannels, 0);
+    unsigned int texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height,
+                 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    stbi_image_free(data);
+    // Texture
+
+    {
+        int atrribcount;
+        glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &atrribcount);
+        debug("Max Number of Attributes supported : " << atrribcount);
+    }
+
+    while (true)
+    {
+        SDL_Event e;
+        while (SDL_PollEvent(&e))
+        {
+            switch (e.type)
+            {
+            case SDL_WINDOWEVENT:
+                if (e.window.event == SDL_WINDOWEVENT_CLOSE)
+                    return 0;
+            case SDL_KEYDOWN:
+                if (e.key.keysym.sym == SDLK_ESCAPE)
+                    return 0;
+                else if (e.key.keysym.sym == SDLK_c)
+                    SetRenderingMode(WIREFRAME);
+            default:
+                break;
+            }
+
+            FillScreenWithColor(window, 0, 0, 255, 255);
+            glClear(GL_COLOR_BUFFER_BIT);
+            Render(mShader);
+            Swap(window);
+        }
+    }
+
+    return 0;
+}
