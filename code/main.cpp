@@ -1,9 +1,9 @@
-#include <iostream>
+#include "GL/glew.h"
 #include "SDL.h"
-#include "GL\glew.h"
 #include "common.h"
 #include "renderer.h"
 #include "shader.h"
+#include <iostream>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
