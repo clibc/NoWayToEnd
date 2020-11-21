@@ -1,10 +1,9 @@
 #include "shader.h"
 
-shader CreateShader(const char *vs, const char *fs)
+void CreateShader(shader &sh, const char *vs, const char *fs)
 {
     GLuint program = LoadShader(vs, fs);
-    shader retVal = {0, program};
-    return retVal;
+    sh.programID = program;
 }
 
 GLint GetUniformLocation(shader &shdr, const char *name)

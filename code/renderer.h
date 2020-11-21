@@ -1,6 +1,5 @@
 #pragma once
-#include "GL/glew.h"
-#include "SDL.h"
+#include "common.h"
 #include "shader.h"
 #include "vertexBuffer.h"
 #include "window.h"

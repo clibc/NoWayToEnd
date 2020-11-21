@@ -1,15 +1,13 @@
-#include "window.h"
 #include "common.h"
+#include "window.h"
 #include "renderer.h"
 #include "shader.h"
 #include "vertexBuffer.h"
 #include "texture.h"
-#include "glm/glm.hpp"
-#include <iostream>
 
 int main(int argc, char *args[])
 {
-    windowgl_sdl window;
+    windowgl_sdl window = {0};
     window.name = "NoWayToEnd";
     window.width = WINDOW_WIDTH;
     window.height = WINDOW_HEIGHT;
@@ -17,8 +15,9 @@ int main(int argc, char *args[])
     CreateWindow(window);
 
     // NOTE(62bit): Shader
-    shader mShader = CreateShader("../code/shaders/vertex.vs",
-                                  "../code/shaders/fragment.vs");
+    shader mShader = {0};
+    CreateShader(mShader, "../code/shaders/vertex.vs",
+                 "../code/shaders/fragment.vs");
     glm::mat4 projection = glm::ortho(0.0f, (float)WINDOW_WIDTH,
                                       (float)WINDOW_HEIGHT, 0.0f,
                                       -1.0f, 1.0f);
