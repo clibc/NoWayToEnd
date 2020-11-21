@@ -1,17 +1,16 @@
 #include "renderer.h"
 
-void FillScreenWithColor(SDL_Window *window,
-                         float r, float g, float b, float a)
+void FillScreenWithColor(float r, float g, float b, float a)
 {
     glClearColor(r, g, b, a);
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void Render(shader sh, GLuint VBO)
+void Render(shader sh, vertex_buffer &vb)
 {
     // TODO(62bit): takes vertex buffer
     glUseProgram(sh.programID);
-    glBindVertexArray(VBO);
+    glBindVertexArray(vb.bufferID);
     glDrawArrays(GL_QUADS, 0, 4);
 }
 

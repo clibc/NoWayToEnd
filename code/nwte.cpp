@@ -1,95 +1,60 @@
-#include "GL/glew.h"
-#include "SDL.h"
+#include "window.h"
 #include "common.h"
 #include "renderer.h"
 #include "shader.h"
+#include "vertexBuffer.h"
+#include "texture.h"
 #include "glm/glm.hpp"
 #include <iostream>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-
 int main(int argc, char *args[])
 {
-    SDL_Init(SDL_INIT_EVERYTHING);
-    SDL_Window *window = SDL_CreateWindow("nwte",
-                                          SDL_WINDOWPOS_CENTERED,
-                                          SDL_WINDOWPOS_CENTERED,
-                                          WINDOW_WIDTH,
-                                          WINDOW_HEIGHT,
-                                          SDL_WINDOW_OPENGL);
-    SDL_GL_CreateContext(window);
+    windowgl_sdl window;
+    window.name = "NoWayToEnd";
+    window.width = WINDOW_WIDTH;
+    window.height = WINDOW_HEIGHT;
 
-    SetAttribs();
+    CreateWindow(window);
 
-    GLenum error = glewInit();
-    if (error != GLEW_OK)
-    {
-        printf("%s", glewGetErrorString(error));
-        return 1;
-    }
+    // NOTE(62bit): Shader
+    shader mShader = CreateShader("../code/shaders/vertex.vs",
+                                  "../code/shaders/fragment.vs");
+    glm::mat4 projection = glm::ortho(0.0f, (float)WINDOW_WIDTH,
+                                      (float)WINDOW_HEIGHT, 0.0f,
+                                      -1.0f, 1.0f);
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3(300.0f, 300.0f, 0.0f));
+    model = glm::scale(model, glm::vec3(590.0f, 590.0f, 0.0f));
+    debug(SetUniformMat4(mShader, "model", model));
+    debug(SetUniformMat4(mShader, "projection", projection));
+    //
 
+    // NOTE(62bit): VertexBuffer
     float vertices[] = {
         0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
         0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
         -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
         -0.5f, 0.5f, 0.0f, 0.0f, 1.0f};
 
-    unsigned int VBO;
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    shader mShader = CreateShader("../code/shaders/vertex.vs",
-                                  "../code/shaders/fragment.vs");
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
-                          (void *)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
-                          (void *)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
+    vertex_buffer vb;
+    vb.vertices = &vertices[0];
+    vb.size = sizeof(vertices);
+    GenerateVertexBuffer(vb);
+    SetAttributeF(vb, 0, 3, 5 * sizeof(float), (void *)0);
+    SetAttributeF(vb, 1, 2, 5 * sizeof(float), (void *)(3 * sizeof(float)));
+    //
 
     // NOTE(62bit): Texture
-    int width, height, nrChannels;
-    unsigned char *data = stbi_load("../assets/texture.jpg",
-                                    &width, &height, &nrChannels, 0);
-
-    unsigned int texture;
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height,
-                 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-
-    stbi_image_free(data);
-    // Texture
-
+    texture tex;
+    tex.path = "../assets/texture.jpg";
+    GenerateTexture(tex);
+    BindTexture(tex);
+    //
     {
         int atrribcount;
         glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &atrribcount);
         debug("Max Number of Attributes supported : " << atrribcount);
     }
-
-    // NOTE(62bit): projection stuff
-
-    glm::mat4 projection = glm::ortho(0.0f, (float)WINDOW_WIDTH,
-                                      (float)WINDOW_HEIGHT, 0.0f,
-                                      -1.0f, 1.0f);
-
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3(300.0f, 300.0f, 0.0f));
-    model = glm::scale(model, glm::vec3(590.0f, 590.0f, 0.0f));
-
-    debug(SetUniformMat4(mShader, "model", model));
-    debug(SetUniformMat4(mShader, "projection", projection));
 
     while (true)
     {
@@ -110,9 +75,9 @@ int main(int argc, char *args[])
                 break;
             }
 
-            FillScreenWithColor(window, 0, 0, 0, 255);
-            Render(mShader, VBO);
-            Swap(window);
+            FillScreenWithColor(0, 0, 0, 255);
+            Render(mShader, vb);
+            Swap(window.window);
         }
     }
 
