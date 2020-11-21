@@ -1,5 +1,7 @@
 #pragma once
 #include "GL/glew.h"
+#include "glm/glm.hpp"
+#include "glm/gtc/type_ptr.hpp"
 #include "common.h"
 #include <fstream>
 #include <iostream>
@@ -12,5 +14,7 @@ struct shader
     GLuint programID;
 };
 
-GLuint LoadShader(const char *vs, const char *fs);
 shader CreateShader(const char *vs, const char *fs);
+GLuint LoadShader(const char *vs, const char *fs);
+GLint GetUniformLocation(shader &shdr, const char *name);
+bool SetUniformMat4(shader &shdr, const char *name, const glm::mat4 &matrix);

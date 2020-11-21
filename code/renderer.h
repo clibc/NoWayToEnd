@@ -14,6 +14,6 @@ enum render_mode
 void FillScreenWithColor(SDL_Window *window,
                          float r, float g, float b, float a);
 
-void Render(shader sh);
+void Render(shader sh, GLuint VBO);
 
 void SetRenderingMode(render_mode mode);

@@ -7,6 +7,21 @@ shader CreateShader(const char *vs, const char *fs)
     return retVal;
 }
 
+GLint GetUniformLocation(shader &shdr, const char *name)
+{
+    return glGetUniformLocation(shdr.programID, name);
+}
+
+bool SetUniformMat4(shader &shdr, const char *name, const glm::mat4 &matrix)
+{
+    glUseProgram(shdr.programID);
+    auto loc = GetUniformLocation(shdr, name);
+    if (loc == -1)
+        return false;
+    glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(matrix));
+    return true;
+}
+
 GLuint LoadShader(const char *vs, const char *fs)
 {
     GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);

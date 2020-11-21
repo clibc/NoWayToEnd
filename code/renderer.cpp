@@ -7,11 +7,12 @@ void FillScreenWithColor(SDL_Window *window,
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void Render(shader sh)
+void Render(shader sh, GLuint VBO)
 {
     // TODO(62bit): takes vertex buffer
     glUseProgram(sh.programID);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glBindVertexArray(VBO);
+    glDrawArrays(GL_QUADS, 0, 4);
 }
 
 void SetRenderingMode(render_mode mode)
