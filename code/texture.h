@@ -11,8 +11,14 @@ struct image_data
 
 struct texture
 {
+    enum type
+    {
+        JPG,
+        PNG
+    };
     // NOTE(62bit): Specify path after creating this struct
     char *path;
+    type texType;
 
     image_data idata;
     unsigned int textureID;

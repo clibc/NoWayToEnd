@@ -8,7 +8,6 @@ void FillScreenWithColor(float r, float g, float b, float a)
 
 void Render(shader sh, vertex_buffer &vb)
 {
-    // TODO(62bit): takes vertex buffer
     glUseProgram(sh.programID);
     glBindVertexArray(vb.bufferID);
     glDrawArrays(GL_QUADS, 0, 4);
