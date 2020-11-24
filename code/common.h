@@ -9,8 +9,8 @@
 #include "glm/gtc/type_ptr.hpp"
 #include "SDL.h"
 
-#define WINDOW_WIDTH 600
-#define WINDOW_HEIGHT 600
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 800
 
 #define debug(x) std::cout << x << '\n'
 

@@ -4,6 +4,7 @@
 #include "shader.h"
 #include "vertexBuffer.h"
 #include "texture.h"
+#include "level_loader.h"
 
 int main(int argc, char *args[])
 {
@@ -45,8 +46,8 @@ int main(int argc, char *args[])
 
     // NOTE(62bit): Texture
     texture tex;
-    tex.path = "../assets/texture.jpg";
-    tex.texType = texture::JPG;
+    tex.path = "../assets/wall.png";
+    tex.texType = texture::PNG;
 
     auto texResult = GenerateTexture(tex);
     if (!texResult)
@@ -59,6 +60,12 @@ int main(int argc, char *args[])
         glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &atrribcount);
         debug("Max Number of Attributes supported : " << atrribcount);
     }
+
+    // NOTE(62bit): Level
+    level lvl = {0};
+    lvl.file_path = "../assets/levels/level1.lvl";
+    load_level(lvl);
+    //
 
     while (true)
     {
@@ -80,7 +87,25 @@ int main(int argc, char *args[])
             }
         }
         FillScreenWithColor(0, 0, 0, 255);
-        Render(mShader, vb);
+
+        for (int i = 0; i < 100; ++i)
+        {
+            int row;
+            int column;
+            if (lvl.cells[i] == 1)
+            {
+                row = i / 10;
+                column = i % 10;
+
+                float x = (column * 80.0f) + 80 / 2;
+                float y = (row * 80.0f) + 80 / 2;
+
+                model = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, 0.0f));
+                model = glm::scale(model, glm::vec3(80.0f, 80.0f, 0.0f));
+                SetUniformMat4(mShader, "model", model);
+                Render(mShader, vb);
+            }
+        }
         Swap(window.window);
     }
 
