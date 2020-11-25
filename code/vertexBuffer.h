@@ -11,5 +11,5 @@ struct vertex_buffer
     unsigned int bufferID;
 };
 
-void GenerateVertexBuffer(vertex_buffer &vb);
-void SetAttributeF(const vertex_buffer &vb, unsigned int index, int size, int32_t stride, const void *pointer);
+void generate_vertex_buffer(vertex_buffer &vb);
+void set_vertex_attributef(const vertex_buffer &vb, unsigned int index, int size, int32_t stride, const void *pointer);

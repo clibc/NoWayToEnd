@@ -12,4 +12,4 @@ struct windowgl_sdl
     SDL_Window *window;
 };
 
-void CreateWindow(windowgl_sdl &window);
+void create_window(windowgl_sdl &window);

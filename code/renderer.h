@@ -4,7 +4,7 @@
 #include "vertexBuffer.h"
 #include "window.h"
 
-#define Swap(x) SDL_GL_SwapWindow(x)
+#define swap(x) SDL_GL_SwapWindow(x)
 
 enum render_mode
 {
@@ -12,8 +12,8 @@ enum render_mode
     FILL
 };
 
-void FillScreenWithColor(float r, float g, float b, float a);
+void fill_screen_with_color(float r, float g, float b, float a);
 
-void Render(shader sh, vertex_buffer &vb);
+void render(shader sh, vertex_buffer &vb);
 
-void SetRenderingMode(render_mode mode);
+void set_rendering_mode(render_mode mode);

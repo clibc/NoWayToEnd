@@ -1,27 +1,27 @@
 #include "shader.h"
 
-void CreateShader(shader &sh, const char *vs, const char *fs)
+void create_shader(shader &sh, const char *vs, const char *fs)
 {
-    GLuint program = LoadShader(vs, fs);
+    GLuint program = load_shader(vs, fs);
     sh.programID = program;
 }
 
-GLint GetUniformLocation(shader &shdr, const char *name)
+GLint get_uniform_location(shader &shdr, const char *name)
 {
     return glGetUniformLocation(shdr.programID, name);
 }
 
-bool SetUniformMat4(shader &shdr, const char *name, const glm::mat4 &matrix)
+bool set_uniform_mat4(shader &shdr, const char *name, const glm::mat4 &matrix)
 {
     glUseProgram(shdr.programID);
-    auto loc = GetUniformLocation(shdr, name);
+    auto loc = get_uniform_location(shdr, name);
     if (loc == -1)
         return false;
     glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(matrix));
     return true;
 }
 
-GLuint LoadShader(const char *vs, const char *fs)
+GLuint load_shader(const char *vs, const char *fs)
 {
     GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
     GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);

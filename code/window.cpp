@@ -1,6 +1,6 @@
 #include "window.h"
 
-void CreateWindow(windowgl_sdl &window)
+void create_window(windowgl_sdl &window)
 {
     SDL_Init(SDL_INIT_EVERYTHING);
     window.window = SDL_CreateWindow(window.name,

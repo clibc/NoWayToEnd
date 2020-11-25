@@ -6,7 +6,7 @@ struct shader
     GLuint programID;
 };
 
-void CreateShader(shader &sh, const char *vs, const char *fs);
-GLuint LoadShader(const char *vs, const char *fs);
-GLint GetUniformLocation(shader &shdr, const char *name);
-bool SetUniformMat4(shader &shdr, const char *name, const glm::mat4 &matrix);
+void create_shader(shader &sh, const char *vs, const char *fs);
+GLuint load_shader(const char *vs, const char *fs);
+GLint get_uniform_location(shader &shdr, const char *name);
+bool set_uniform_mat4(shader &shdr, const char *name, const glm::mat4 &matrix);
