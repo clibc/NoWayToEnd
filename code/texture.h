@@ -24,5 +24,5 @@ struct texture
     unsigned int textureID;
 };
 
-bool GenerateTexture(texture &tex);
+bool generate_texture(texture &tex);
 inline void BindTexture(const texture &tex) { glBindTexture(GL_TEXTURE_2D, tex.textureID); }

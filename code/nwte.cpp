@@ -49,7 +49,7 @@ int main(int argc, char *args[])
     tex.path = "../assets/wall.png";
     tex.texType = texture::PNG;
 
-    auto texResult = GenerateTexture(tex);
+    auto texResult = generate_texture(tex);
     if (!texResult)
         debug("Texture can't be loaded!");
     BindTexture(tex);
@@ -89,21 +89,11 @@ int main(int argc, char *args[])
         fill_screen_with_color(0, 0, 0, 255);
 
         for (int i = 0; i < 100; ++i)
+        {
             if (lvl.cells[i] == 1)
             {
-                row = i / 10;
-                column = i % 10;
-
-                float x = (column * 80.0f) + 80 / 2;
-                float y = (row * 80.0f) + 80 / 2;
-
-                model = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, 0.0f));
-                model = glm::scale(model, glm::vec3(80.0f, 80.0f, 0.0f));
-                set_uniform_mat4(mShader, "model", model);
-                render(mShader, vb);
-                row = i / 10;
-                column = i % 10;
-
+                int row = i / 10;
+                int column = i % 10;
                 float x = (column * 80.0f) + 80 / 2;
                 float y = (row * 80.0f) + 80 / 2;
 
@@ -112,9 +102,9 @@ int main(int argc, char *args[])
                 set_uniform_mat4(mShader, "model", model);
                 render(mShader, vb);
             }
-    }
-    swap(window.window);
-}
+        }
 
-return 0;
+        swap(window.window);
+    }
+    return 0;
 }
