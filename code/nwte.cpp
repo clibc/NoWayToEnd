@@ -52,7 +52,7 @@ int main(int argc, char *args[])
     auto texResult = generate_texture(tex);
     if (!texResult)
         debug("Texture can't be loaded!");
-    BindTexture(tex);
+    bind_texture(tex);
     //
 
     {
