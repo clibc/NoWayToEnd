@@ -21,6 +21,16 @@ bool set_uniform_mat4(shader &shdr, const char *name, const glm::mat4 &matrix)
     return true;
 }
 
+bool set_uniform_vec2(shader &shdr, const char *name, const glm::vec2 &vector)
+{
+    glUseProgram(shdr.programID);
+    auto loc = get_uniform_location(shdr, name);
+    if (loc == -1)
+        return false;
+    glUniform2f(loc, vector.x, vector.y);
+    return true;
+}
+
 GLuint load_shader(const char *vs, const char *fs)
 {
     GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
