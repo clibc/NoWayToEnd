@@ -7,6 +7,8 @@ struct image_data
     int width;
     int height;
     int nrChannels;
+
+    unsigned char *data;
 };
 
 struct texture
@@ -26,3 +28,4 @@ struct texture
 
 bool generate_texture(texture &tex);
 inline void bind_texture(const texture &tex) { glBindTexture(GL_TEXTURE_2D, tex.textureID); }
+void texture_create_sub_image(const texture &tex, int xoffset, int yoffset, int width, int height);

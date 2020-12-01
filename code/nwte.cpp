@@ -54,28 +54,28 @@ int main(int argc, char *args[])
                           (void *)(3 * sizeof(float)));
     //
 
-    // NOTE(62bit): Texture
     texture tex;
     tex.path = "../assets/coin.png";
     tex.texType = texture::PNG;
 
-    auto texResult = generate_texture(tex);
-    if (!texResult)
-        debug("Texture can't be loaded!");
+    if (!generate_texture(tex))
+        debug("texture generation failed!");
+
     bind_texture(tex);
-    //
 
-    {
-        int atrribcount;
-        glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &atrribcount);
-        debug("Max Number of Attributes supported : " << atrribcount);
-    }
+    texture_create_sub_image(tex, 31, 0, 160, 30);
 
-    // NOTE(62bit): Level
-    level lvl = {0};
-    lvl.file_path = "../assets/levels/level1.lvl";
-    load_level(lvl);
-    //
+    unsigned char *img;
+
+    glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, img);
+
+    GLuint tex2;
+
+    glGenTextures(1, &tex2);
+    glBindTexture(GL_TEXTURE_2D, tex2);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 160, 31, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, img);
+    glGenerateMipmap(GL_TEXTURE_2D);
 
     while (true)
     {
