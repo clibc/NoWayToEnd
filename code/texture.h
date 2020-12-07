@@ -26,6 +26,6 @@ struct texture
     unsigned int textureID;
 };
 
-bool generate_texture(texture &tex);
-inline void bind_texture(const texture &tex) { glBindTexture(GL_TEXTURE_2D, tex.textureID); }
+bool texture_generate(texture &tex);
+inline void texture_bind(const texture &tex) { glBindTexture(GL_TEXTURE_2D, tex.textureID); }
 void texture_create_sub_image(const texture &tex, int xoffset, int yoffset, int width, int height);

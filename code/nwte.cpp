@@ -6,6 +6,8 @@
 #include "vertexBuffer.h"
 #include "window.h"
 
+#include "stb_image.h"
+
 void handle_input();
 
 int main(int argc, char *args[])
@@ -26,18 +28,8 @@ int main(int argc, char *args[])
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(400.0f, 400.0f, 0.0f));
     model = glm::scale(model, glm::vec3(300.0f, 300.0f, 0.0f));
-    debug(set_uniform_mat4(mShader, "model", model));
-    debug(set_uniform_mat4(mShader, "projection", projection));
-    //
-
-    /*
-	// NOTE(62bit): VertexBuffer
-	float vertices[] = {
-	0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
-	0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-	-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
-	-0.5f, 0.5f, 0.0f, 0.0f, 1.0f};
-	*/
+    set_uniform_mat4(mShader, "model", model);
+    set_uniform_mat4(mShader, "projection", projection);
 
     float vertices[] = {
         0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
@@ -50,32 +42,29 @@ int main(int argc, char *args[])
     vb.size = sizeof(vertices);
     generate_vertex_buffer(vb);
     set_vertex_attributef(vb, 0, 3, 5 * sizeof(float), (void *)0);
-    set_vertex_attributef(vb, 1, 2, 5 * sizeof(float),
-                          (void *)(3 * sizeof(float)));
-    //
+    set_vertex_attributef(vb, 1, 2, 5 * sizeof(float), (void *)(3 * sizeof(float)));
 
-    texture tex;
-    tex.path = "../assets/coin.png";
-    tex.texType = texture::PNG;
+    int width, height, nr;
+    unsigned char *data = stbi_load("../assets/wall.png", &width, &height, &nr, 0);
 
-    if (!generate_texture(tex))
-        debug("texture generation failed!");
+    const int x = 32;
+    const int y = 32;
 
-    bind_texture(tex);
+    unsigned char clipped[(x * y) * 4];
 
-    texture_create_sub_image(tex, 31, 0, 160, 30);
+    memcpy(clipped, data, (x * y) * 4);
 
-    unsigned char *img;
+    unsigned int ctexture;
+    glGenTextures(1, &ctexture);
+    glBindTexture(GL_TEXTURE_2D, ctexture);
 
-    glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, img);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    GLuint tex2;
-
-    glGenTextures(1, &tex2);
-    glBindTexture(GL_TEXTURE_2D, tex2);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 160, 31, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, img);
-    glGenerateMipmap(GL_TEXTURE_2D);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, x, y, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, clipped);
 
     while (true)
     {

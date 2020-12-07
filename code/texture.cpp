@@ -3,7 +3,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-bool generate_texture(texture &tex)
+bool texture_generate(texture &tex)
 {
     tex.idata.data = stbi_load(tex.path,
                                &tex.idata.width,
