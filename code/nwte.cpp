@@ -5,6 +5,7 @@
 #include "texture.h"
 #include "vertexBuffer.h"
 #include "window.h"
+#include "bmp_loader.h"
 
 #include "stb_image.h"
 
@@ -44,27 +45,17 @@ int main(int argc, char *args[])
     set_vertex_attributef(vb, 0, 3, 5 * sizeof(float), (void *)0);
     set_vertex_attributef(vb, 1, 2, 5 * sizeof(float), (void *)(3 * sizeof(float)));
 
-    int width, height, nr;
-    unsigned char *data = stbi_load("../assets/wall.png", &width, &height, &nr, 0);
+    bmp_image *image = load_bmp_file("../assets/test.bmp");
 
-    const int x = 32;
-    const int y = 32;
-
-    unsigned char clipped[(x * y) * 4];
-
-    memcpy(clipped, data, (x * y) * 4);
-
-    unsigned int ctexture;
-    glGenTextures(1, &ctexture);
-    glBindTexture(GL_TEXTURE_2D, ctexture);
-
+    unsigned int texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, x, y, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE, clipped);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image->width, image->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image->pixel_data);
+    glGenerateMipmap(GL_TEXTURE_2D);
 
     while (true)
     {
