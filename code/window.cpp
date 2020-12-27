@@ -3,6 +3,7 @@
 void create_window(windowgl_sdl &window)
 {
     SDL_Init(SDL_INIT_EVERYTHING);
+
     SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
     SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 5);
     SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);

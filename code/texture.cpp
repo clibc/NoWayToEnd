@@ -3,30 +3,30 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-bool texture_generate(texture &tex)
+bool texture_generate(texture *tex, const char *file_path, texture::type type)
 {
-    tex.idata.data = stbi_load(tex.path,
-                               &tex.idata.width,
-                               &tex.idata.height,
-                               &tex.idata.nrChannels, 0);
+    tex->idata.data = stbi_load(file_path,
+                                &tex->idata.width,
+                                &tex->idata.height,
+                                &tex->idata.nrChannels, 0);
 
-    if (tex.idata.data == NULL)
+    if (tex->idata.data == NULL)
         return false;
 
-    glGenTextures(1, &tex.textureID);
-    glBindTexture(GL_TEXTURE_2D, tex.textureID);
+    glGenTextures(1, &tex->textureID);
+    glBindTexture(GL_TEXTURE_2D, tex->textureID);
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    if (tex.texType == texture::PNG)
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tex.idata.width,
-                     tex.idata.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, tex.idata.data);
-    else if (tex.texType == texture::JPG)
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, tex.idata.width,
-                     tex.idata.height, 0, GL_RGB, GL_UNSIGNED_BYTE, tex.idata.data);
+    if (type == texture::PNG)
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tex->idata.width,
+                     tex->idata.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, tex->idata.data);
+    else if (type == texture::JPG)
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, tex->idata.width,
+                     tex->idata.height, 0, GL_RGB, GL_UNSIGNED_BYTE, tex->idata.data);
 
     glGenerateMipmap(GL_TEXTURE_2D);
 

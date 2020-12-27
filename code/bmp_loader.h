@@ -39,6 +39,7 @@ static bmp_image *load_bmp_file(const char *file_path)
     file_buffer = (unsigned char *)malloc(file_size);
     fread(file_buffer, sizeof(char), file_size, file);
 
+    // TODO(62bit): Receive an image pointer, so we may prevent heap allocation
     image = (bmp_image *)malloc(sizeof(bmp_image));
     memcpy(&header, file_buffer, sizeof(bmp_header));
     memcpy(&image->width, file_buffer + 0x12, sizeof(uint32_t));
