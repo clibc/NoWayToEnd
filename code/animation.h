@@ -5,6 +5,7 @@ struct animation
 {
     const texture *tex;
     int clip_size;
+    unsigned int clip_count;
     glm::vec2 *clips;
 };
 

@@ -57,26 +57,28 @@ int main(int argc, char *args[])
     texture tex;
     texture_generate(&tex, "../assets/coin.png", texture::PNG);
 
-    //32
-    const int sprite_size = 32;
-    float x = (float)sprite_size / (float)tex.idata.width;
-    int i = 0;
-    glm::vec2 texPos1(x + (x * float(i)), 1.0f);
-    glm::vec2 texPos2(x + (x * float(i)), 0.0f);
-    glm::vec2 texPos3(x * i, 0.0f);
-    glm::vec2 texPos4(x * i, 1.0f);
-
     animation coin_animation;
     create_animation(&coin_animation, &tex, 32);
 
-    set_uniform_vec2(mShader, "t_positions[0]", texPos1);
-    set_uniform_vec2(mShader, "t_positions[1]", texPos2);
-    set_uniform_vec2(mShader, "t_positions[2]", texPos3);
-    set_uniform_vec2(mShader, "t_positions[3]", texPos4);
+    set_uniform_vec2(mShader, "t_positions[0]", coin_animation.clips[8]);
+    set_uniform_vec2(mShader, "t_positions[1]", coin_animation.clips[9]);
+    set_uniform_vec2(mShader, "t_positions[2]", coin_animation.clips[10]);
+    set_uniform_vec2(mShader, "t_positions[3]", coin_animation.clips[11]);
 
+    render_animation(coin_animation, mShader);
+
+    float test_time = 0.0f;
     while (true)
     {
+        update_time();
+        test_time += delta_time;
+        if (test_time >= 1.0f)
+        {
+            debug("time is up");
+            time_test = 0.0f;
+        }
         fill_screen_with_color(0, 0, 0, 255);
+        render_animation(coin_animation, mShader);
         render(mShader, vb);
         swap(window.window);
         handle_input();
@@ -87,7 +89,7 @@ int main(int argc, char *args[])
 void handle_input()
 {
     SDL_Event e;
-    while (SDL_WaitEvent(&e))
+    while (SDL_PollEvent(&e))
     {
         switch (e.type)
         {
