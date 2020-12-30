@@ -11,6 +11,7 @@
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 800
+#define ANIMATION_PLAY_TIME 0.4f
 
 #define debug(x) std::cout << x << '\n'
 
@@ -26,13 +27,5 @@
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE); \
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-static float delta_time;
-static float first_time;
-
-static void update_time()
-{
-    // TODO(62bit): FIX THIS SHIT!
-    float time = (float)SDL_GetTicks();
-    delta_time = time - first_time;
-    first_time = time;
-}
+extern inline float get_delta_time();
+extern void update_delta_time();
