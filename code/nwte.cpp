@@ -38,8 +38,8 @@ int main(int argc, char *args[])
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(400.0f, 400.0f, 0.0f));
     model = glm::scale(model, glm::vec3(200.0f, 300.0f, 0.0f));
+    model = glm::rotate(model, 50.0f, glm::vec3(0.0f, 0.0f, 1.0f));
 
-    //NOTE(62bit): This crap is not here for a reason. It is because of me being an idiot
     glm::vec3 vertxPos1(0.5f, 0.5f, 0.0f);
     glm::vec3 vertxPos2(0.5f, -0.5f, 0.0f);
     glm::vec3 vertxPos3(-0.5f, -0.5f, 0.0f);
@@ -65,7 +65,7 @@ int main(int argc, char *args[])
     set_vertex_attributef(vb, 0, 3, 3 * sizeof(float), (void *)0);
 
     texture tex;
-    texture_generate(&tex, "../assets/pirate.png", texture::PNG);
+    texture_generate(&tex, "../assets/clock.png", texture::PNG);
 
     animation coin_animation;
     create_animation(&coin_animation, &tex, 32);
@@ -73,7 +73,7 @@ int main(int argc, char *args[])
     while (true)
     {
         update_delta_time();
-        fill_screen_with_color(1, 1, 0, 255);
+        fill_screen_with_color(1, 0, 0, 0);
         renderer_set_animation(coin_animation, mShader);
         render(mShader, vb);
         swap(window.window);

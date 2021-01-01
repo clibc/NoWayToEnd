@@ -11,7 +11,7 @@
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 800
-#define ANIMATION_PLAY_TIME 0.4f
+#define ANIMATION_PLAY_TIME 0.3f
 
 #define debug(x) std::cout << x << '\n'
 
