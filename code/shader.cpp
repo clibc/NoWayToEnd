@@ -1,5 +1,25 @@
 #include "shader.h"
 
+static const GLchar *default_vs = {
+    "#version 330 core\n"
+    "layout(location = 0) in vec3 position;\n"
+    "layout(location = 1) in vec2 texCoord;\n"
+    "out vec2 TexCoord;\n"
+    "void main()\n"
+    "{\n"
+    "gl_Position = vec4(position, 1.0);\n"
+    "TexCoord = texCoord;\n"
+    "}\0"};
+static const GLchar *default_fs = {
+    "#version 330 core\n"
+    "in vec2 TexCoord;\n"
+    "out vec4 color;\n"
+    "uniform sampler2D texture;\n"
+    "void main()\n"
+    "{\n"
+    "color = texture2D(texture, TexCoord);\n"
+    "}\0"};
+
 void create_shader(shader &sh, const char *vs, const char *fs)
 {
     GLuint program = load_shader(vs, fs);
@@ -39,6 +59,65 @@ bool set_uniform_vec3(shader &shdr, const char *name, const glm::vec3 &vector)
         return false;
     glUniform3f(loc, vector.x, vector.y, vector.z);
     return true;
+}
+
+shader load_default_shader()
+{
+    GLuint vsID = glCreateShader(GL_VERTEX_SHADER);
+    GLuint fsID = glCreateShader(GL_FRAGMENT_SHADER);
+
+    GLint Result = GL_FALSE;
+    int InfoLogLength;
+
+    debug("Compiling Default Vertex Shader...");
+    glShaderSource(vsID, 1, &default_vs, NULL);
+    glCompileShader(vsID);
+
+    glGetShaderiv(vsID, GL_COMPILE_STATUS, &Result);
+    glGetShaderiv(vsID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+    if (InfoLogLength > 0)
+    {
+        std::vector<char> VertexShaderErrorMessage(InfoLogLength + 1);
+        glGetShaderInfoLog(vsID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
+        debug(&VertexShaderErrorMessage[0]);
+    }
+
+    debug("Compiling Default Fragment Shader...");
+    glShaderSource(fsID, 1, &default_fs, NULL);
+    glCompileShader(fsID);
+
+    glGetShaderiv(fsID, GL_COMPILE_STATUS, &Result);
+    glGetShaderiv(fsID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+    if (InfoLogLength > 0)
+    {
+        std::vector<char> VertexShaderErrorMessage(InfoLogLength + 1);
+        glGetShaderInfoLog(fsID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
+        debug(&VertexShaderErrorMessage[0]);
+    }
+
+    debug("Linking Default program");
+    GLuint ProgramID = glCreateProgram();
+    glAttachShader(ProgramID, vsID);
+    glAttachShader(ProgramID, fsID);
+    glLinkProgram(ProgramID);
+
+    glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
+    glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+    if (InfoLogLength > 0)
+    {
+        std::vector<char> ProgramErrorMessage(InfoLogLength + 1);
+        glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
+        debug(ProgramErrorMessage[0]);
+    }
+
+    glDetachShader(ProgramID, vsID);
+    glDetachShader(ProgramID, fsID);
+
+    glDeleteShader(vsID);
+    glDeleteShader(fsID);
+
+    shader sh = {ProgramID};
+    return sh;
 }
 
 GLuint load_shader(const char *vs, const char *fs)
