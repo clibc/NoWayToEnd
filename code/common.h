@@ -27,5 +27,5 @@
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE); \
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-extern inline float get_delta_time();
-extern void update_delta_time();
+float get_delta_time();
+void update_delta_time();

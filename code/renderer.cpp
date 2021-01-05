@@ -2,8 +2,12 @@
 
 void fill_screen_with_color(float r, float g, float b, float a)
 {
+    float p1 = r / 255.0f;
+    float p2 = g / 255.0f;
+    float p3 = b / 255.0f;
+    float p4 = a;
     glClear(GL_COLOR_BUFFER_BIT);
-    glClearColor(r, g, b, a);
+    glClearColor(p1, p2, p3, p4);
 }
 
 void render(shader sh, vertex_buffer &vb)

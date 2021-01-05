@@ -11,7 +11,7 @@
 static unsigned int lastTime = 0, currentTime;
 static float deltaTime;
 void handle_input();
-inline float get_delta_time() { return deltaTime; }
+float get_delta_time() { return deltaTime; }
 
 void update_delta_time()
 {
@@ -61,7 +61,7 @@ int main(int argc, char *args[])
     vertex_buffer vb;
     vb.vertices = &vertices[0];
     vb.size = sizeof(vertices);
-    generate_vertex_buffer(vb);
+    generate_dynamic_vertex_buffer(vb);
     set_vertex_attributef(vb, 0, 3, 3 * sizeof(float), (void *)0);
     texture tex;
     texture_generate(&tex, "../assets/coin.png", texture::PNG);
@@ -72,7 +72,7 @@ int main(int argc, char *args[])
     while (true)
     {
         update_delta_time();
-        fill_screen_with_color(1, 0, 0, 0);
+        fill_screen_with_color(21, 21, 21, 1);
         renderer_set_animation(coin_animation, mShader);
         render(mShader, vb);
         swap(window.window);
