@@ -13,6 +13,10 @@
 #define WINDOW_HEIGHT 800
 #define ANIMATION_PLAY_TIME 0.3f
 
+#define COLUMNCOUNT 10
+#define ROWCOUNT 10
+#define CELLSIZE 80
+
 #define debug(x) std::cout << x << '\n'
 
 #define SetAttribs()                                                               \

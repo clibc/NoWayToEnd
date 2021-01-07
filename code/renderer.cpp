@@ -55,3 +55,11 @@ void renderer_set_animation(const animation &anim, shader &sh)
         first_clip_displayed = true;
     }
 }
+
+void renderer_set_texture(shader &sh)
+{
+    set_uniform_vec2(sh, "t_positions[0]", glm::vec2(1.0f, 1.0f));
+    set_uniform_vec2(sh, "t_positions[1]", glm::vec2(1.0f, 0.0f));
+    set_uniform_vec2(sh, "t_positions[2]", glm::vec2(0.0f, 0.0f));
+    set_uniform_vec2(sh, "t_positions[3]", glm::vec2(0.0f, 1.0f));
+}

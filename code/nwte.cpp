@@ -7,11 +7,24 @@
 #include "window.h"
 #include "animation.h"
 #include "stb_image.h"
+#include "scene.h"
 
-static unsigned int lastTime = 0, currentTime;
+enum cells
+{
+    EMPTY,
+    WALL,
+    COIN,
+    PLAYER
+};
+
+static unsigned int lastTime = 0,
+                    currentTime;
 static float deltaTime;
 void handle_input();
 float get_delta_time() { return deltaTime; }
+
+const uint8_t *KeyboardStates;
+inline bool get_key_down(SDL_Scancode s) { return KeyboardStates[s]; }
 
 void update_delta_time()
 {
@@ -23,66 +36,69 @@ void update_delta_time()
 int main(int argc, char *args[])
 {
     windowgl_sdl window = {0};
-    window.name = "NoWayToEnd";
-    window.width = WINDOW_WIDTH;
-    window.height = WINDOW_HEIGHT;
+    create_window(window, "NoWayToEnd", WINDOW_WIDTH, WINDOW_HEIGHT);
+    scene scn = {0};
+    scene_init(scn);
 
-    create_window(window);
-
-    // NOTE(62bit): Shader
-    shader mShader = {0};
-    create_shader(mShader, "../code/shaders/vertex.vs",
-                  "../code/shaders/fragment.vs");
-    glm::mat4 projection = glm::ortho(0.0f, (float)WINDOW_WIDTH,
-                                      (float)WINDOW_HEIGHT, 0.0f, -1.0f, 1.0f);
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(400.0f, 400.0f, 0.0f));
     model = glm::scale(model, glm::vec3(200.0f, 300.0f, 0.0f));
 
-    glm::vec3 vertxPos1(0.5f, 0.5f, 0.0f);
-    glm::vec3 vertxPos2(0.5f, -0.5f, 0.0f);
-    glm::vec3 vertxPos3(-0.5f, -0.5f, 0.0f);
-    glm::vec3 vertxPos4(-0.5f, 0.5f, 0.0f);
-
-    set_uniform_vec3(mShader, "c_positions[0]", vertxPos1);
-    set_uniform_vec3(mShader, "c_positions[1]", vertxPos2);
-    set_uniform_vec3(mShader, "c_positions[2]", vertxPos3);
-    set_uniform_vec3(mShader, "c_positions[3]", vertxPos4);
-
-    set_uniform_mat4(mShader, "model", model);
-    set_uniform_mat4(mShader, "projection", projection);
-
-    float vertices[] = {
-        0.5f, 0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        -0.5f, -0.5f, 0.0f,
-        -0.5f, 0.5f, 0.0f};
-
-    vertex_buffer vb;
-    vb.vertices = &vertices[0];
-    vb.size = sizeof(vertices);
-    generate_dynamic_vertex_buffer(vb);
-    set_vertex_attributef(vb, 0, 3, 3 * sizeof(float), (void *)0);
-    texture tex;
-    texture_generate(&tex, "../assets/coin.png", texture::PNG);
+    set_uniform_mat4(scn.sh, "model", model);
+    texture coinTexture;
+    texture wallTexture;
+    texture_generate(&coinTexture, "../assets/coin.png", texture::PNG);
+    texture_generate(&wallTexture, "../assets/wall.png", texture::PNG);
 
     animation coin_animation;
-    create_animation(&coin_animation, &tex, 32);
+    create_animation(&coin_animation, &coinTexture, 32);
 
+    level lvl;
+    load_level(lvl, "../assets/levels/level1.lvl");
     while (true)
     {
         update_delta_time();
-        fill_screen_with_color(21, 21, 21, 1);
-        renderer_set_animation(coin_animation, mShader);
-        render(mShader, vb);
-        swap(window.window);
         handle_input();
+        fill_screen_with_color(21, 21, 21, 1);
+
+        int row;
+        int column;
+        for (int i = 0; i < 100; ++i)
+        {
+            row = i / COLUMNCOUNT;
+            column = i % ROWCOUNT;
+            int x = column * CELLSIZE + (CELLSIZE / 2);
+            int y = row * CELLSIZE + (CELLSIZE / 2);
+            switch (lvl.cells[i])
+            {
+            case WALL:
+                model = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, 0.0f));
+                model = glm::scale(model, glm::vec3(CELLSIZE, CELLSIZE, 0.0f));
+                set_uniform_mat4(scn.sh, "model", model);
+                texture_bind(wallTexture);
+                renderer_set_texture(scn.sh);
+                render(scn.sh, scn.vb);
+                break;
+            case COIN:
+                model = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, 0.0f));
+                model = glm::scale(model, glm::vec3(CELLSIZE, CELLSIZE, 0.0f));
+                set_uniform_mat4(scn.sh, "model", model);
+                texture_bind(coinTexture);
+                renderer_set_animation(coin_animation, scn.sh);
+                render(scn.sh, scn.vb);
+                break;
+            default:
+                break;
+            }
+        }
+        swap(window.window);
     }
     return 0;
 }
 
 void handle_input()
 {
+    KeyboardStates = SDL_GetKeyboardState(NULL);
     SDL_Event e;
     while (SDL_PollEvent(&e))
     {
@@ -92,10 +108,13 @@ void handle_input()
             if (e.window.event == SDL_WINDOWEVENT_CLOSE)
                 exit(0);
         case SDL_KEYDOWN:
-            if (e.key.keysym.sym == SDLK_ESCAPE)
+            if (get_key_down(SDL_SCANCODE_ESCAPE))
                 exit(0);
-            else if (e.key.keysym.sym == SDLK_c)
-                set_rendering_mode(WIREFRAME);
+            if (get_key_down(SDL_SCANCODE_W))
+            {
+                debug("exec");
+            }
+
         default:
             break;
         }

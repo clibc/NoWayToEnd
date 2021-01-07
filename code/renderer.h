@@ -19,3 +19,4 @@ void render(shader sh, vertex_buffer &vb);
 
 void set_rendering_mode(render_mode mode);
 void renderer_set_animation(const animation &anim, shader &sh);
+void renderer_set_texture(shader &sh);

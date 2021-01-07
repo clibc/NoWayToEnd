@@ -1,6 +1,6 @@
 #include "window.h"
 
-void create_window(windowgl_sdl &window)
+void create_window(windowgl_sdl &window, char *name, int width, int height)
 {
     SDL_Init(SDL_INIT_EVERYTHING);
 
@@ -11,6 +11,12 @@ void create_window(windowgl_sdl &window)
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
+    char *temp = (char *)malloc(strlen(name));
+    strcpy(temp, name);
+
+    window.name = temp;
+    window.width = width;
+    window.height = height;
     window.window = SDL_CreateWindow(window.name,
                                      SDL_WINDOWPOS_CENTERED,
                                      SDL_WINDOWPOS_CENTERED,

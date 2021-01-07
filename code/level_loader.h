@@ -4,19 +4,16 @@
 
 struct level
 {
-    // NOTE(62bit): Input
     char *file_path;
-
-    // NOTE(62bit): Output
-    int cells[99];
+    int cells[100];
 };
 
-static void load_level(level &lvl)
+static void load_level(level &lvl, const char *filepath)
 {
     int index = 0;
     std::string line;
     std::ifstream _fStream;
-    _fStream = std::ifstream(lvl.file_path);
+    _fStream = std::ifstream(filepath);
 
     if (_fStream)
     {
