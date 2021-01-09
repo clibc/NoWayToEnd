@@ -1,13 +1,14 @@
+#include "animation.h"
 #include "common.h"
 #include "level_loader.h"
 #include "renderer.h"
+#include "scene.h"
 #include "shader.h"
+#include "stb_image.h"
 #include "texture.h"
 #include "vertexBuffer.h"
 #include "window.h"
-#include "animation.h"
-#include "stb_image.h"
-#include "scene.h"
+#include "player.h"
 
 enum cells
 {
@@ -17,14 +18,15 @@ enum cells
     PLAYER
 };
 
-static unsigned int lastTime = 0,
-                    currentTime;
+static unsigned int lastTime = 0, currentTime;
 static float deltaTime;
 void handle_input();
 float get_delta_time() { return deltaTime; }
 
 const uint8_t *KeyboardStates;
 inline bool get_key_down(SDL_Scancode s) { return KeyboardStates[s]; }
+static player plyr;
+static level lvl;
 
 void update_delta_time()
 {
@@ -44,16 +46,20 @@ int main(int argc, char *args[])
     model = glm::translate(model, glm::vec3(400.0f, 400.0f, 0.0f));
     model = glm::scale(model, glm::vec3(200.0f, 300.0f, 0.0f));
 
-    set_uniform_mat4(scn.sh, "model", model);
+    set_uniform_mat4(scn.anim_shader, "model", model);
     texture coinTexture;
-    texture wallTexture;
     texture_generate(&coinTexture, "../assets/coin.png", texture::PNG);
+    texture wallTexture;
     texture_generate(&wallTexture, "../assets/wall.png", texture::PNG);
+    texture playerTexture;
+    texture_generate(&playerTexture, "../assets/player.png", texture::PNG);
 
     animation coin_animation;
     create_animation(&coin_animation, &coinTexture, 32);
 
-    level lvl;
+    plyr.x = 8;
+    plyr.y = 1;
+
     load_level(lvl, "../assets/levels/level1.lvl");
     while (true)
     {
@@ -74,18 +80,26 @@ int main(int argc, char *args[])
             case WALL:
                 model = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, 0.0f));
                 model = glm::scale(model, glm::vec3(CELLSIZE, CELLSIZE, 0.0f));
-                set_uniform_mat4(scn.sh, "model", model);
+                set_uniform_mat4(scn.reg_shader, "model", model);
                 texture_bind(wallTexture);
-                renderer_set_texture(scn.sh);
-                render(scn.sh, scn.vb);
+                render(scn.reg_shader, scn.reg_vertex);
                 break;
             case COIN:
                 model = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, 0.0f));
                 model = glm::scale(model, glm::vec3(CELLSIZE, CELLSIZE, 0.0f));
-                set_uniform_mat4(scn.sh, "model", model);
+                set_uniform_mat4(scn.anim_shader, "model", model);
+                renderer_set_animation(coin_animation, scn.anim_shader);
                 texture_bind(coinTexture);
-                renderer_set_animation(coin_animation, scn.sh);
-                render(scn.sh, scn.vb);
+                render(scn.anim_shader, scn.anim_vertex);
+                break;
+            case PLAYER:
+                x = plyr.y * CELLSIZE + (CELLSIZE / 2);
+                y = plyr.x * CELLSIZE + (CELLSIZE / 2);
+                model = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, 0.0f));
+                model = glm::scale(model, glm::vec3(CELLSIZE, CELLSIZE, 0.0f));
+                set_uniform_mat4(scn.reg_shader, "model", model);
+                texture_bind(playerTexture);
+                render(scn.reg_shader, scn.reg_vertex);
                 break;
             default:
                 break;
@@ -95,7 +109,6 @@ int main(int argc, char *args[])
     }
     return 0;
 }
-
 void handle_input()
 {
     KeyboardStates = SDL_GetKeyboardState(NULL);
@@ -110,9 +123,25 @@ void handle_input()
         case SDL_KEYDOWN:
             if (get_key_down(SDL_SCANCODE_ESCAPE))
                 exit(0);
-            if (get_key_down(SDL_SCANCODE_W))
+            if (get_key_down(SDL_SCANCODE_LEFT))
             {
-                debug("exec");
+                if (player_can_move(lvl.cells[plyr.y - 1 + plyr.x * 10]))
+                    plyr.y -= 1;
+            }
+            if (get_key_down(SDL_SCANCODE_RIGHT))
+            {
+                if (player_can_move(lvl.cells[plyr.y + 1 + plyr.x * 10]))
+                    plyr.y += 1;
+            }
+            if (get_key_down(SDL_SCANCODE_UP))
+            {
+                if (player_can_move(lvl.cells[plyr.y + (plyr.x - 1) * 10]))
+                    plyr.x -= 1;
+            }
+            if (get_key_down(SDL_SCANCODE_DOWN))
+            {
+                if (player_can_move(lvl.cells[plyr.y + (plyr.x + 1) * 10]))
+                    plyr.x += 1;
             }
 
         default:

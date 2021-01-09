@@ -1,9 +1,9 @@
 #pragma once
+#include "animation.h"
 #include "common.h"
 #include "shader.h"
 #include "vertexBuffer.h"
 #include "window.h"
-#include "animation.h"
 
 #define swap(x) SDL_GL_SwapWindow(x)
 

@@ -4,8 +4,10 @@
 
 struct scene
 {
-    shader sh;
-    vertex_buffer vb;
+    shader anim_shader;
+    shader reg_shader;
+    vertex_buffer anim_vertex;
+    vertex_buffer reg_vertex;
     glm::mat4 view;
     glm::mat4 projection;
 };
