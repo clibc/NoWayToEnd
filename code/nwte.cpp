@@ -125,23 +125,27 @@ void handle_input()
                 exit(0);
             if (get_key_down(SDL_SCANCODE_LEFT))
             {
-                if (player_can_move(lvl.cells[plyr.y - 1 + plyr.x * 10]))
-                    plyr.y -= 1;
+                if (plyr.y - 1 >= 0)
+                    if (player_can_move(lvl.cells[plyr.y - 1 + plyr.x * 10]))
+                        plyr.y -= 1;
             }
             if (get_key_down(SDL_SCANCODE_RIGHT))
             {
-                if (player_can_move(lvl.cells[plyr.y + 1 + plyr.x * 10]))
-                    plyr.y += 1;
+                if (plyr.y + 1 < 10)
+                    if (player_can_move(lvl.cells[plyr.y + 1 + plyr.x * 10]))
+                        plyr.y += 1;
             }
             if (get_key_down(SDL_SCANCODE_UP))
             {
-                if (player_can_move(lvl.cells[plyr.y + (plyr.x - 1) * 10]))
-                    plyr.x -= 1;
+                if (plyr.x - 1 >= 0)
+                    if (player_can_move(lvl.cells[plyr.y + (plyr.x - 1) * 10]))
+                        plyr.x -= 1;
             }
             if (get_key_down(SDL_SCANCODE_DOWN))
             {
-                if (player_can_move(lvl.cells[plyr.y + (plyr.x + 1) * 10]))
-                    plyr.x += 1;
+                if (plyr.x + 1 < 10)
+                    if (player_can_move(lvl.cells[plyr.y + (plyr.x + 1) * 10]))
+                        plyr.x += 1;
             }
 
         default:
