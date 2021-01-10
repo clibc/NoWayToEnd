@@ -123,25 +123,25 @@ void handle_input()
         case SDL_KEYDOWN:
             if (get_key_down(SDL_SCANCODE_ESCAPE))
                 exit(0);
-            if (get_key_down(SDL_SCANCODE_LEFT))
+            if (get_key_down(SDL_SCANCODE_LEFT) || get_key_down(SDL_SCANCODE_A))
             {
                 if (plyr.y - 1 >= 0)
                     if (player_can_move(lvl.cells[plyr.y - 1 + plyr.x * 10]))
                         plyr.y -= 1;
             }
-            if (get_key_down(SDL_SCANCODE_RIGHT))
+            if (get_key_down(SDL_SCANCODE_RIGHT) || get_key_down(SDL_SCANCODE_D))
             {
                 if (plyr.y + 1 < 10)
                     if (player_can_move(lvl.cells[plyr.y + 1 + plyr.x * 10]))
                         plyr.y += 1;
             }
-            if (get_key_down(SDL_SCANCODE_UP))
+            if (get_key_down(SDL_SCANCODE_UP) || get_key_down(SDL_SCANCODE_W))
             {
                 if (plyr.x - 1 >= 0)
                     if (player_can_move(lvl.cells[plyr.y + (plyr.x - 1) * 10]))
                         plyr.x -= 1;
             }
-            if (get_key_down(SDL_SCANCODE_DOWN))
+            if (get_key_down(SDL_SCANCODE_DOWN) || get_key_down(SDL_SCANCODE_S))
             {
                 if (plyr.x + 1 < 10)
                     if (player_can_move(lvl.cells[plyr.y + (plyr.x + 1) * 10]))

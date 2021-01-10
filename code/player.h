@@ -14,7 +14,7 @@ struct player
 
 inline bool player_can_move(int cell)
 {
-    if (cell == player::empty || cell == player::coin)
+    if (cell == player::empty || cell == player::coin || cell == 3)
         return true;
     return false;
 }
