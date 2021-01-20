@@ -1,6 +1,7 @@
 #include "animation.h"
 #include "common.h"
 #include "level_loader.h"
+#include "player.h"
 #include "renderer.h"
 #include "scene.h"
 #include "shader.h"
@@ -8,7 +9,6 @@
 #include "texture.h"
 #include "vertexBuffer.h"
 #include "window.h"
-#include "player.h"
 
 enum cells
 {
@@ -45,70 +45,26 @@ int main(int argc, char *args[])
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(400.0f, 400.0f, 0.0f));
     model = glm::scale(model, glm::vec3(200.0f, 300.0f, 0.0f));
-
     set_uniform_mat4(scn.anim_shader, "model", model);
-    texture coinTexture;
-    texture_generate(&coinTexture, "../assets/coin.png", texture::PNG);
+
     texture wallTexture;
-    texture_generate(&wallTexture, "../assets/wall.png", texture::PNG);
-    texture playerTexture;
-    texture_generate(&playerTexture, "../assets/player.png", texture::PNG);
-
-    animation coin_animation;
-    create_animation(&coin_animation, &coinTexture, 32);
-
-    plyr.x = 8;
-    plyr.y = 1;
+    texture_generate(&wallTexture, "../assets/levels/wall.png", texture::PNG);
+    texture_bind(wallTexture);
 
     load_level(lvl, "../assets/levels/level1.lvl");
     while (true)
     {
-        update_delta_time();
         handle_input();
+        update_delta_time();
         fill_screen_with_color(21, 21, 21, 1);
-
-        int row;
-        int column;
-        for (int i = 0; i < 100; ++i)
-        {
-            row = i / COLUMNCOUNT;
-            column = i % ROWCOUNT;
-            int x = column * CELLSIZE + (CELLSIZE / 2);
-            int y = row * CELLSIZE + (CELLSIZE / 2);
-            switch (lvl.cells[i])
-            {
-            case WALL:
-                model = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, 0.0f));
-                model = glm::scale(model, glm::vec3(CELLSIZE, CELLSIZE, 0.0f));
-                set_uniform_mat4(scn.reg_shader, "model", model);
-                texture_bind(wallTexture);
-                render(scn.reg_shader, scn.reg_vertex);
-                break;
-            case COIN:
-                model = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, 0.0f));
-                model = glm::scale(model, glm::vec3(CELLSIZE, CELLSIZE, 0.0f));
-                set_uniform_mat4(scn.anim_shader, "model", model);
-                renderer_set_animation(coin_animation, scn.anim_shader);
-                texture_bind(coinTexture);
-                render(scn.anim_shader, scn.anim_vertex);
-                break;
-            case PLAYER:
-                x = plyr.y * CELLSIZE + (CELLSIZE / 2);
-                y = plyr.x * CELLSIZE + (CELLSIZE / 2);
-                model = glm::translate(glm::mat4(1.0f), glm::vec3(x, y, 0.0f));
-                model = glm::scale(model, glm::vec3(CELLSIZE, CELLSIZE, 0.0f));
-                set_uniform_mat4(scn.reg_shader, "model", model);
-                texture_bind(playerTexture);
-                render(scn.reg_shader, scn.reg_vertex);
-                break;
-            default:
-                break;
-            }
-        }
+        glUseProgram(scn.anim_shader.programID);
+        glBindVertexArray(scn.anim_vertex.bufferID);
+        glDrawArrays(GL_QUADS, 0, 50);
         swap(window.window);
     }
     return 0;
 }
+
 void handle_input()
 {
     KeyboardStates = SDL_GetKeyboardState(NULL);

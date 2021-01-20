@@ -14,7 +14,7 @@ void render(shader sh, vertex_buffer &vb)
 {
     glUseProgram(sh.programID);
     glBindVertexArray(vb.bufferID);
-    glDrawArrays(GL_QUADS, 0, 4);
+    glDrawArrays(GL_QUADS, 0, 8);
 }
 
 void set_rendering_mode(render_mode mode)

@@ -1,31 +1,14 @@
 #version 330 core
 layout(location = 0) in vec3 position;
+layout(location = 1) in vec2 tPos;
 
 out vec2 TexCoord;
 
 uniform mat4 model;
 uniform mat4 projection;
-uniform vec3 c_positions[4];
-uniform vec2 t_positions[4];
 
 void main()
 {
-    if (position == c_positions[0])
-    {
-        TexCoord = t_positions[0];
-    }
-    else if (position == c_positions[1])
-    {
-        TexCoord = t_positions[1];
-    }
-    else if (position == c_positions[2])
-    {
-        TexCoord = t_positions[2];
-    }
-    else if (position == c_positions[3])
-    {
-        TexCoord = t_positions[3];
-    }
-
-    gl_Position = projection * model * vec4(position, 1.0);
+     TexCoord = tPos;
+     gl_Position = projection * model * vec4(position, 1.0);
 }
