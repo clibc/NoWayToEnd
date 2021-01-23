@@ -20,7 +20,7 @@ void scene_init(scene &scn)
     create_batch(bat, 10, 10);
 
     scn.anim_vertex.vertices = bat.vertex_data;
-    scn.anim_vertex.size = bat.vertex_count * sizeof(float);
+    scn.anim_vertex.size = (size_t)bat.vertex_count * sizeof(float);
     generate_dynamic_vertex_buffer(scn.anim_vertex);
     set_vertex_attributef(scn.anim_vertex, 0, 3, 5 * sizeof(float), (void *)0);
     set_vertex_attributef(scn.anim_vertex, 1, 2, 5 * sizeof(float), (void *)(3 * sizeof(float)));

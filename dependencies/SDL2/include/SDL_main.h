@@ -72,7 +72,7 @@
 #define SDL_MAIN_NEEDED
 
 /* We need to export SDL_main so it can be launched from Java */
-#define SDLMAIN_DECLSPEC    DECLSPEC
+#define SDLMAIN_DECLSPEC DECLSPEC
 
 #elif defined(__NACL__)
 /* On NACL we use ppapi_simple to set up the application helper code,
@@ -106,44 +106,43 @@
  */
 
 #if defined(SDL_MAIN_NEEDED) || defined(SDL_MAIN_AVAILABLE)
-#define main    SDL_main
+#define main SDL_main
 #endif
 
 #include "begin_code.h"
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-/**
+    /**
  *  The prototype for the application's main() function
  */
-typedef int (*SDL_main_func)(int argc, char *argv[]);
-extern SDLMAIN_DECLSPEC int SDL_main(int argc, char *argv[]);
+    typedef int (*SDL_main_func)(int argc, char *argv[]);
+    extern SDLMAIN_DECLSPEC int SDL_main(int argc, char *argv[]);
 
-
-/**
+    /**
  *  This is called by the real SDL main function to let the rest of the
  *  library know that initialization was done properly.
  *
  *  Calling this yourself without knowing what you're doing can cause
  *  crashes and hard to diagnose problems with your application.
  */
-extern DECLSPEC void SDLCALL SDL_SetMainReady(void);
+    extern DECLSPEC void SDLCALL SDL_SetMainReady(void);
 
 #ifdef __WIN32__
 
-/**
+    /**
  *  This can be called to set the application class at startup
  */
-extern DECLSPEC int SDLCALL SDL_RegisterApp(char *name, Uint32 style, void *hInst);
-extern DECLSPEC void SDLCALL SDL_UnregisterApp(void);
+    extern DECLSPEC int SDLCALL SDL_RegisterApp(char *name, Uint32 style, void *hInst);
+    extern DECLSPEC void SDLCALL SDL_UnregisterApp(void);
 
 #endif /* __WIN32__ */
 
-
 #ifdef __WINRT__
 
-/**
+    /**
  *  \brief Initializes and launches an SDL/WinRT application.
  *
  *  \param mainFunction The SDL app's C-style main().
@@ -151,13 +150,13 @@ extern DECLSPEC void SDLCALL SDL_UnregisterApp(void);
  *  \return 0 on success, -1 on failure.  On failure, use SDL_GetError to retrieve more
  *      information on the failure.
  */
-extern DECLSPEC int SDLCALL SDL_WinRTRunApp(SDL_main_func mainFunction, void * reserved);
+    extern DECLSPEC int SDLCALL SDL_WinRTRunApp(SDL_main_func mainFunction, void *reserved);
 
 #endif /* __WINRT__ */
 
 #if defined(__IPHONEOS__)
 
-/**
+    /**
  *  \brief Initializes and launches an SDL application.
  *
  *  \param argc The argc parameter from the application's main() function
@@ -165,10 +164,9 @@ extern DECLSPEC int SDLCALL SDL_WinRTRunApp(SDL_main_func mainFunction, void * r
  *  \param mainFunction The SDL app's C-style main().
  *  \return the return value from mainFunction
  */
-extern DECLSPEC int SDLCALL SDL_UIKitRunApp(int argc, char *argv[], SDL_main_func mainFunction);
+    extern DECLSPEC int SDLCALL SDL_UIKitRunApp(int argc, char *argv[], SDL_main_func mainFunction);
 
 #endif /* __IPHONEOS__ */
-
 
 #ifdef __cplusplus
 }

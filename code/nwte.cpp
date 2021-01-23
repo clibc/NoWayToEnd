@@ -35,31 +35,91 @@ void update_delta_time()
     lastTime = currentTime;
 }
 
+struct Vertex
+{
+    glm::vec3 positions;
+    glm::vec2 textureCoords;
+};
+
+void CreateQuad(Vertex *array, float x, float y)
+{
+    static float size = 1.0f;
+
+    Vertex ver1 = {glm::vec3(x, y, 0.0f), glm::vec2(1.0f, 1.0f)};
+    Vertex ver2 = {glm::vec3(x + size, y, 0.0f), glm::vec2(1.0f, 0.0f)};
+    Vertex ver3 = {glm::vec3(x + size, y + size, 0.0f), glm::vec2(0.0f, 0.0f)};
+    Vertex ver4 = {glm::vec3(x, y + size, 0.0f), glm::vec2(0.0f, 1.0f)};
+
+    array[0] = ver1;
+    array[1] = ver2;
+    array[2] = ver3;
+    array[3] = ver4;
+}
+
 int main(int argc, char *args[])
 {
     windowgl_sdl window = {0};
     create_window(window, "NoWayToEnd", WINDOW_WIDTH, WINDOW_HEIGHT);
-    scene scn = {0};
-    scene_init(scn);
 
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3(400.0f, 400.0f, 0.0f));
-    model = glm::scale(model, glm::vec3(200.0f, 300.0f, 0.0f));
-    set_uniform_mat4(scn.anim_shader, "model", model);
+    const int quadCount = 10;
+    Vertex vertices[quadCount * 4];
 
-    texture wallTexture;
-    texture_generate(&wallTexture, "../assets/levels/wall.png", texture::PNG);
-    texture_bind(wallTexture);
+    for (int i = 0; i < quadCount; ++i)
+    {
+        CreateQuad(&vertices[i * 4], 0.0f + i % 6, 1.0f * (i / 6));
+    }
 
-    load_level(lvl, "../assets/levels/level1.lvl");
+    vertex_buffer vb;
+    vb.vertices = (float *)vertices;
+    vb.size = sizeof(Vertex) * 4 * quadCount;
+    generate_dynamic_vertex_buffer(vb);
+    set_vertex_attributef(vb, 0, 3, sizeof(float) * 5, (void *)0);
+    set_vertex_attributef(vb, 1, 2, sizeof(float) * 5, (void *)(sizeof(float) * 3));
+
+    //    int indices[] = {0, 1, 2, 2, 3, 0,
+    //               4, 5, 6, 6, 7, 4};
+
+    int indices[quadCount * 6];
+
+    for (int i = 0; i < quadCount; ++i)
+    {
+        static int count = 0;
+        int index = i * 6;
+        indices[index] = count;
+        indices[index + 1] = count + 1;
+        indices[index + 2] = count + 2;
+        indices[index + 3] = count + 2;
+        indices[index + 4] = count + 3;
+        indices[index + 5] = count;
+        count += 4;
+    }
+
+    GLuint indexBuffer;
+    glCreateBuffers(1, &indexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+    shader sh;
+    create_shader(sh, "../code/shaders/vertex.vs", "../code/shaders/fragment.vs");
+    auto projection = glm::ortho(0.0f, (float)WINDOW_WIDTH, (float)WINDOW_HEIGHT, 0.0f, -1.0f, 1.0f);
+    auto model = glm::translate(glm::mat4(1.0f), glm::vec3(200.0f, 200.0f, 0.0f));
+    model = glm::scale(model, glm::vec3(50.0f));
+
+    debug(set_uniform_mat4(sh, "model", model));
+    debug(set_uniform_mat4(sh, "projection", projection));
+
+    bind_vertex_buffer(vb);
+    glUseProgram(sh.programID);
+
+    texture tex;
+    texture_generate(&tex, "../assets/wall.png", texture::PNG);
+
     while (true)
     {
         handle_input();
         update_delta_time();
-        fill_screen_with_color(21, 21, 21, 1);
-        glUseProgram(scn.anim_shader.programID);
-        glBindVertexArray(scn.anim_vertex.bufferID);
-        glDrawArrays(GL_QUADS, 0, 50);
+        fill_screen_with_color(100, 21, 21, 1);
+        glDrawElements(GL_TRIANGLES, quadCount * 6, GL_UNSIGNED_INT, nullptr);
         swap(window.window);
     }
     return 0;
