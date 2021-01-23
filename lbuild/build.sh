@@ -1,4 +1,4 @@
-flags="-g -O0 -Wall"
+flags="-g -O0"
 includes="-I /home/eax/Desktop/sdl_game/dependencies/ \
 	  -I /home/eax/Desktop/sdl_game/dependencies/GLEW \
 	  -I /home/eax/Desktop/sdl_game/dependencies/SDL2/include/ \
@@ -10,8 +10,9 @@ files="/home/eax/Desktop/sdl_game/code/*.cpp"
 
 libs="-lSDL2 -lGL -lGLEW"
 
-
+pushd /home/eax/Desktop/sdl_game/lbuild/
 time g++ $flags $includes $files $libs
+popd
 
 RESULT=$?
 
