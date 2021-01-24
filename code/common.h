@@ -33,3 +33,11 @@
 
 float get_delta_time();
 void update_delta_time();
+
+enum cells
+{
+    EMPTY,
+    WALL,
+    COIN,
+    PLAYER
+};

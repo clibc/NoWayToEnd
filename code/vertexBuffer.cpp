@@ -21,36 +21,97 @@ void set_vertex_attributef(const vertex_buffer &vb, unsigned int index, int size
     glEnableVertexAttribArray(index);
 }
 
-void create_batch(batch &b, int quadCountX, int quadCountY)
+void create_batch_series(batch &bch, int quadCount, int quadsPerRow)
 {
-    b.vertex_count = quadCountX * quadCountY * 5 * 4;
-    b.vertex_data = (float *)malloc(sizeof(float) * b.vertex_count);
-    float quadWidth = 1.0f / (float)quadCountX;
-    float quadHeight = 1.0f / (float)quadCountY;
-    for (int i = 0; i < quadCountX * quadCountY; ++i)
+    bch.quadCount = quadCount;
+    bch.index_count = bch.quadCount * 6;
+    bch.vertex_data = (Vertex *)malloc(sizeof(Vertex) * bch.quadCount * 4);
+
+    for (int i = 0; i < bch.quadCount; ++i)
     {
-        b.vertex_data[(i * 20) + 0] = quadWidth + (quadWidth * (float)i);
-        b.vertex_data[(i * 20) + 1] = quadHeight + (quadHeight * (float)i);
-        b.vertex_data[(i * 20) + 2] = 0.0f;
-        b.vertex_data[(i * 20) + 3] = 1.0f;
-        b.vertex_data[(i * 20) + 4] = 1.0f;
-
-        b.vertex_data[(i * 20) + 5] = quadWidth + (quadWidth * (float)i);
-        b.vertex_data[(i * 20) + 6] = -(quadHeight + (quadHeight * (float)i));
-        b.vertex_data[(i * 20) + 7] = 0.0f;
-        b.vertex_data[(i * 20) + 8] = 1.0f;
-        b.vertex_data[(i * 20) + 9] = 0.0f;
-
-        b.vertex_data[(i * 20) + 10] = -(quadWidth + (quadWidth * (float)i));
-        b.vertex_data[(i * 20) + 11] = -(quadHeight + (quadHeight * (float)i));
-        b.vertex_data[(i * 20) + 12] = 0.0f;
-        b.vertex_data[(i * 20) + 13] = 0.0f;
-        b.vertex_data[(i * 20) + 14] = 0.0f;
-
-        b.vertex_data[(i * 20) + 15] = -(quadWidth + (quadWidth * (float)i));
-        b.vertex_data[(i * 20) + 16] = quadHeight + (quadHeight * (float)i);
-        b.vertex_data[(i * 20) + 17] = 0.0f;
-        b.vertex_data[(i * 20) + 18] = 0.0f;
-        b.vertex_data[(i * 20) + 19] = 1.0f;
+        CreateQuadBatch(bch, 0.0f + i % quadsPerRow, 1.0f * (i / quadsPerRow));
     }
+    CreateIndexArrayBatch(bch);
+
+    glCreateBuffers(1, &bch.indexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bch.indexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * bch.index_count, bch.index_data, GL_STATIC_DRAW);
+
+    vertex_buffer vb;
+    vb.vertices = (float *)bch.vertex_data;
+    vb.size = sizeof(Vertex) * 4 * bch.quadCount;
+    generate_dynamic_vertex_buffer(vb);
+    bch.vertexBuffer = vb.bufferID;
+    set_vertex_attributef(vb, 0, 3, sizeof(float) * 5, (void *)0);
+    set_vertex_attributef(vb, 1, 2, sizeof(float) * 5, (void *)(sizeof(float) * 3));
+}
+
+void create_batch_for_level(batch &bch, level &lvl)
+{
+    int quad_count = 0;
+    for (int i = 0; i < sizeof(lvl.cells) / sizeof(lvl.cells[0]); ++i)
+        if (lvl.cells[i] == WALL)
+            quad_count += 1;
+
+    bch.quadCount = quad_count;
+    bch.index_count = bch.quadCount * 6;
+    bch.vertex_data = (Vertex *)malloc(sizeof(Vertex) * bch.quadCount * 4);
+
+    for (int i = 0; i < sizeof(lvl.cells) / sizeof(lvl.cells[0]); ++i)
+    {
+        if (lvl.cells[i] == WALL)
+        {
+            float x = (float)(i / 10);
+            float y = (float)(i % 10);
+            CreateQuadBatch(bch, 0.0f + x, 1.0f * y);
+        }
+    }
+    CreateIndexArrayBatch(bch);
+
+    glCreateBuffers(1, &bch.indexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bch.indexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * bch.index_count, bch.index_data, GL_STATIC_DRAW);
+
+    vertex_buffer vb;
+    vb.vertices = (float *)bch.vertex_data;
+    vb.size = sizeof(Vertex) * 4 * bch.quadCount;
+    generate_dynamic_vertex_buffer(vb);
+    bch.vertexBuffer = vb.bufferID;
+    set_vertex_attributef(vb, 0, 3, sizeof(float) * 5, (void *)0);
+    set_vertex_attributef(vb, 1, 2, sizeof(float) * 5, (void *)(sizeof(float) * 3));
+}
+
+void CreateQuadBatch(batch &bat, float x, float y)
+{
+    static Vertex *array = bat.vertex_data;
+    const float size = 1.0f;
+
+    Vertex ver1 = {glm::vec3(x, y, 0.0f), glm::vec2(1.0f, 1.0f)};
+    Vertex ver2 = {glm::vec3(x + size, y, 0.0f), glm::vec2(1.0f, 0.0f)};
+    Vertex ver3 = {glm::vec3(x + size, y + size, 0.0f), glm::vec2(0.0f, 0.0f)};
+    Vertex ver4 = {glm::vec3(x, y + size, 0.0f), glm::vec2(0.0f, 1.0f)};
+
+    array[0] = ver1;
+    array[1] = ver2;
+    array[2] = ver3;
+    array[3] = ver4;
+    array = array + 4;
+}
+
+void CreateIndexArrayBatch(batch &bat)
+{
+    int *indices = (int *)malloc(sizeof(int) * bat.quadCount * 6);
+    for (int i = 0; i < bat.quadCount; ++i)
+    {
+        static int count = 0;
+        int index = i * 6;
+        indices[index] = count;
+        indices[index + 1] = count + 1;
+        indices[index + 2] = count + 2;
+        indices[index + 3] = count + 2;
+        indices[index + 4] = count + 3;
+        indices[index + 5] = count;
+        count += 4;
+    }
+    bat.index_data = indices;
 }

@@ -13,3 +13,4 @@ bool set_uniform_mat4(shader &shdr, const char *name, const glm::mat4 &matrix);
 bool set_uniform_vec2(shader &shdr, const char *name, const glm::vec2 &vector);
 bool set_uniform_vec3(shader &shdr, const char *name, const glm::vec3 &vector);
 shader load_default_shader();
+inline void shader_bind(shader sh) { glUseProgram(sh.programID); }

@@ -14,7 +14,28 @@ void render(shader sh, vertex_buffer &vb)
 {
     glUseProgram(sh.programID);
     glBindVertexArray(vb.bufferID);
-    glDrawArrays(GL_QUADS, 0, 8);
+    set_vertex_attributef(vb, 0, 3, 3 * sizeof(float), (void *)0);
+    glDrawArrays(GL_QUADS, 0, 4);
+}
+
+void render_animation(shader sh, vertex_buffer &vb)
+{
+    glUseProgram(sh.programID);
+    bind_vertex_buffer_id(vb.bufferID);
+    set_vertex_attributef(vb, 0, 3, 3 * sizeof(float), (void *)0);
+    glDrawArrays(GL_QUADS, 0, 4);
+}
+
+void render_batch(batch bch, shader batch_shader)
+{
+    shader_bind(batch_shader);
+    bind_vertex_buffer_id(bch.vertexBuffer);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void *)0);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void *)(sizeof(float) * 3));
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bch.indexBuffer);
+    glDrawElements(GL_TRIANGLES, bch.quadCount * 6, GL_UNSIGNED_INT, nullptr);
 }
 
 void set_rendering_mode(render_mode mode)
