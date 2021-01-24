@@ -1,4 +1,3 @@
-
 @echo off
 
 set files=..\code\*.cpp
