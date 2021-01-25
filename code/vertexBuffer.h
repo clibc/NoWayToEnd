@@ -35,5 +35,5 @@ inline void bind_vertex_buffer(const vertex_buffer &vb) { glBindBuffer(GL_ARRAY_
 inline void bind_vertex_buffer_id(GLuint vb) { glBindBuffer(GL_ARRAY_BUFFER, vb); }
 void create_batch_series(batch &bch, int quadCount, int quadsPerRow);
 void create_batch_for_level(batch &bch, level &lvl);
-void CreateQuadBatch(batch &bat, float x, float y);
+void CreateQuadBatch(Vertex *array, float x, float y);
 void CreateIndexArrayBatch(batch &bat);

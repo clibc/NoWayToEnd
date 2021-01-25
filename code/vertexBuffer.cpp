@@ -29,7 +29,7 @@ void create_batch_series(batch &bch, int quadCount, int quadsPerRow)
 
     for (int i = 0; i < bch.quadCount; ++i)
     {
-        CreateQuadBatch(bch, 0.0f + i % quadsPerRow, 1.0f * (i / quadsPerRow));
+        CreateQuadBatch((Vertex *)&bch.vertex_data[i * 4], 0.0f + i % quadsPerRow, 1.0f * (i / quadsPerRow));
     }
     CreateIndexArrayBatch(bch);
 
@@ -57,13 +57,15 @@ void create_batch_for_level(batch &bch, level &lvl)
     bch.index_count = bch.quadCount * 6;
     bch.vertex_data = (Vertex *)malloc(sizeof(Vertex) * bch.quadCount * 4);
 
+    int count_for_quad_index = 0;
     for (int i = 0; i < sizeof(lvl.cells) / sizeof(lvl.cells[0]); ++i)
     {
         if (lvl.cells[i] == WALL)
         {
             float x = (float)(i / 10);
             float y = (float)(i % 10);
-            CreateQuadBatch(bch, 0.0f + x, 1.0f * y);
+            CreateQuadBatch((Vertex *)(&bch.vertex_data[count_for_quad_index * 4]), 0.0f + x, 1.0f * y);
+            count_for_quad_index += 1;
         }
     }
     CreateIndexArrayBatch(bch);
@@ -81,9 +83,8 @@ void create_batch_for_level(batch &bch, level &lvl)
     set_vertex_attributef(vb, 1, 2, sizeof(float) * 5, (void *)(sizeof(float) * 3));
 }
 
-void CreateQuadBatch(batch &bat, float x, float y)
+void CreateQuadBatch(Vertex *array, float x, float y)
 {
-    static Vertex *array = bat.vertex_data;
     const float size = 1.0f;
 
     Vertex ver1 = {glm::vec3(x, y, 0.0f), glm::vec2(1.0f, 1.0f)};

@@ -29,7 +29,11 @@ void update_delta_time()
 int main(int argc, char *args[])
 {
     windowgl_sdl window = {0};
-    create_window(window, "NoWayToEnd", WINDOW_WIDTH, WINDOW_HEIGHT);
+    create_window(window, "NoWaToEnd", WINDOW_WIDTH, WINDOW_HEIGHT);
+
+    batch bch = {0};
+    bch.vertex_data = (Vertex *)malloc(sizeof(Vertex) * 5);
+    CreateQuadBatch(bch.vertex_data, 1, 2);
 
     scene_init(scn);
 
