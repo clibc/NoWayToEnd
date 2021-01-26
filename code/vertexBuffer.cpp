@@ -96,15 +96,30 @@ void CreateQuadBatch(Vertex *array, float x, float y)
     array[1] = ver2;
     array[2] = ver3;
     array[3] = ver4;
+}
+
+void CreateQuadBatchTextureIndex(TextureVertex *array, float x, float y, float textureID)
+{
+    const float size = 1.0f;
+
+    TextureVertex ver1 = {glm::vec3(x, y, 0.0f), glm::vec2(1.0f, 1.0f), textureID};
+    TextureVertex ver2 = {glm::vec3(x + size, y, 0.0f), glm::vec2(1.0f, 0.0f), textureID};
+    TextureVertex ver3 = {glm::vec3(x + size, y + size, 0.0f), glm::vec2(0.0f, 0.0f), textureID};
+    TextureVertex ver4 = {glm::vec3(x, y + size, 0.0f), glm::vec2(0.0f, 1.0f), textureID};
+
+    array[0] = ver1;
+    array[1] = ver2;
+    array[2] = ver3;
+    array[3] = ver4;
     array = array + 4;
 }
 
 void CreateIndexArrayBatch(batch &bat)
 {
     int *indices = (int *)malloc(sizeof(int) * bat.quadCount * 6);
+    int count = 0;
     for (int i = 0; i < bat.quadCount; ++i)
     {
-        static int count = 0;
         int index = i * 6;
         indices[index] = count;
         indices[index + 1] = count + 1;

@@ -18,6 +18,13 @@ struct Vertex
     glm::vec2 textureCoords;
 };
 
+struct TextureVertex
+{
+    glm::vec3 positions;
+    glm::vec2 textureCoords;
+    float textureID;
+};
+
 struct batch
 {
     Vertex *vertex_data;
@@ -37,3 +44,4 @@ void create_batch_series(batch &bch, int quadCount, int quadsPerRow);
 void create_batch_for_level(batch &bch, level &lvl);
 void CreateQuadBatch(Vertex *array, float x, float y);
 void CreateIndexArrayBatch(batch &bat);
+void CreateQuadBatchTextureIndex(TextureVertex *array, float x, float y, float textureID);
