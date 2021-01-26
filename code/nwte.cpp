@@ -31,9 +31,52 @@ int main(int argc, char *args[])
     windowgl_sdl window = {0};
     create_window(window, "NoWaToEnd", WINDOW_WIDTH, WINDOW_HEIGHT);
 
+    // TODO(62bit): WE ALREADY GET VERTICES PROPERLY, BUT TEXTURES ARE NOT OK.
+    /// different textures
+
     batch bch = {0};
-    bch.vertex_data = (Vertex *)malloc(sizeof(Vertex) * 5);
-    CreateQuadBatch(bch.vertex_data, 1, 2);
+    bch.quadCount = 9;
+    bch.vertex_data = (Vertex *)malloc(sizeof(TextureVertex) * bch.quadCount * 4);
+    bch.index_count = bch.quadCount * 6;
+
+    bool index = false;
+    for (int i = 0; i < 9; ++i)
+    {
+        if (!index)
+        {
+            CreateQuadBatchTextureIndex((TextureVertex *)bch.vertex_data + i * 4, 0.0f + (i * 3), 1.0f * (i / 3), 1.0f);
+            index = true;
+        }
+        else
+        {
+            CreateQuadBatchTextureIndex((TextureVertex *)bch.vertex_data + i * 4, 0.0f + (i * 3), 1.0f * (i / 3), 0.0f);
+            index = false;
+        }
+    }
+    CreateIndexArrayBatch(bch);
+    glCreateBuffers(1, &bch.indexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bch.indexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * bch.index_count, bch.index_data, GL_STATIC_DRAW);
+
+    vertex_buffer vb;
+    vb.vertices = (float *)bch.vertex_data;
+    vb.size = sizeof(TextureVertex) * 4 * bch.quadCount;
+    generate_dynamic_vertex_buffer(vb);
+    bch.vertexBuffer = vb.bufferID;
+    set_vertex_attributef(vb, 0, 3, sizeof(float) * 6, (void *)0);
+    set_vertex_attributef(vb, 1, 2, sizeof(float) * 6, (void *)(sizeof(float) * 3));
+    set_vertex_attributef(vb, 2, 1, sizeof(float) * 6, (void *)(sizeof(float) * 5));
+
+    shader batchShader;
+    create_shader(batchShader, "../code/shaders/vertex.vs", "../code/shaders/batch_frag.vs");
+    set_uniform_mat4(batchShader, "model", scn.batch_model);
+    set_uniform_mat4(batchShader, "projection", scn.projection);
+
+    int samplers[2] = {0, 1};
+    auto location = glGetUniformLocation(batchShader.programID, "textures");
+    glUniform1iv(location, 2, samplers);
+
+    ////////
 
     scene_init(scn);
 
@@ -54,6 +97,11 @@ int main(int argc, char *args[])
     glm::mat4 player_transform = glm::translate(glm::mat4(1.0f), glm::vec3(480.0f, 400.0f, 0.0f));
     player_transform = glm::scale(player_transform, glm::vec3(80.0f));
 
+    ///
+    glBindTextureUnit(0, tex.textureID);
+    glBindTextureUnit(1, coinTexture.textureID);
+    ///
+
     while (true)
     {
         handle_input();
@@ -62,7 +110,7 @@ int main(int argc, char *args[])
 
         set_uniform_mat4(scn.reg_shader, "model", scn.batch_model);
         texture_bind(tex);
-        render_batch(scn.bch, scn.reg_shader);
+        //render_batch(scn.bch, scn.reg_shader);
 
         for (int i = 0; i < 100; ++i)
         {
@@ -78,7 +126,7 @@ int main(int argc, char *args[])
                 player_transform = glm::scale(player_transform, glm::vec3(CELLSIZE, CELLSIZE, 0.0f));
                 set_uniform_mat4(scn.reg_shader, "model", player_transform);
                 texture_bind(playerTexture);
-                render(scn.reg_shader, scn.reg_vertex);
+                //render(scn.reg_shader, scn.reg_vertex);
                 break;
             }
             case COIN:
@@ -90,7 +138,7 @@ int main(int argc, char *args[])
                 set_uniform_mat4(scn.anim_shader, "model", anim_transform);
                 texture_bind(coinTexture);
                 renderer_set_animation(coin_animation, scn.anim_shader);
-                render_animation(scn.anim_shader, scn.anim_vertex);
+                //render_animation(scn.anim_shader, scn.anim_vertex);
                 break;
             }
 
@@ -99,6 +147,15 @@ int main(int argc, char *args[])
             }
         }
 
+        ///
+        bind_vertex_buffer(vb);
+        set_uniform_mat4(batchShader, "model", scn.batch_model);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (void *)0);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (void *)(sizeof(float) * 3));
+        glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (void *)(sizeof(float) * 5));
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bch.indexBuffer);
+        glDrawElements(GL_TRIANGLES, bch.index_count, GL_UNSIGNED_INT, nullptr);
+        ///
         swap(window.window);
     }
     return 0;
