@@ -13,7 +13,7 @@ void fill_screen_with_color(float r, float g, float b, float a)
 void render(shader sh, vertex_buffer &vb)
 {
     glUseProgram(sh.programID);
-    glBindVertexArray(vb.bufferID);
+    bind_vertex_buffer(vb);
     set_vertex_attributef(vb, 0, 3, 3 * sizeof(float), (void *)0);
     glDrawArrays(GL_QUADS, 0, 4);
 }
