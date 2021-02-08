@@ -11,7 +11,7 @@ uniform mat4 projection;
 
 void main()
 {
-     TexCoord = tPos;
-	 textureIndex = texID;	 
-	 gl_Position = projection * model * vec4(position, 1.0);
+    TexCoord = tPos;
+	textureIndex = texID;
+	gl_Position = projection * model * vec4(position, 1.0);
 }

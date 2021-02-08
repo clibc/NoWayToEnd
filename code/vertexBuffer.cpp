@@ -17,8 +17,9 @@ void generate_dynamic_vertex_buffer(vertex_buffer &vb)
 void set_vertex_attributef(const vertex_buffer &vb, unsigned int index, int size, int32_t stride, const void *pointer)
 {
     glBindBuffer(GL_ARRAY_BUFFER, vb.bufferID);
+	glEnableVertexAttribArray(index);
     glVertexAttribPointer(index, size, GL_FLOAT, GL_FALSE, stride, pointer);
-    glEnableVertexAttribArray(index);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void create_batch_series(batch &bch, int quadCount, int quadsPerRow)
