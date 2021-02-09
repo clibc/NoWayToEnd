@@ -9,8 +9,9 @@ Scene above being rendered with 3 Draw Calls.
 # Build instructions :
 #### Linux:
 Required packages:
-	- libsdl2-dev
-	- libglfw3-dev
+ - libsdl2-dev
+ - libglfw3-dev
+
 `cd lbuild/`
 `chmod +x build.sh`
 `./build.sh`
