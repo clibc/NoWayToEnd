@@ -37,7 +37,7 @@ int main(int argc, char *args[]){
 	CreateSeriesBatchTwoTextures(batch_tex, 25, 5);
 	
 	shader simpleShader;
-	create_shader(simpleShader, "../code/shaders/simpleBatch.vs", "../code/shaders/simplefrag.vs");
+	create_shader(simpleShader, "../code/shaders/simplebatch.vs", "../code/shaders/simplefrag.vs");
 	auto modelbatch = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 	modelbatch = glm::scale(modelbatch, glm::vec3(80.0f));
 	
