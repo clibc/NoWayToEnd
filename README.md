@@ -11,7 +11,8 @@ Scene above being rendered with 3 Draw Calls.
 Required packages:
  - libsdl2-dev
  - libglfw3-dev
-
+ - OpenGL 4.6
+ 
 `cd lbuild/` </br>
 `chmod +x build.sh` </br>
 `./build.sh`
