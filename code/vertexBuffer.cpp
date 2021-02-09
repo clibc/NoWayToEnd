@@ -27,7 +27,8 @@ void create_batch_series(batch &bch, int quadCount, int quadsPerRow)
     bch.quadCount = quadCount;
     bch.index_count = bch.quadCount * 6;
     bch.vertex_data = (Vertex *)malloc(sizeof(Vertex) * bch.quadCount * 4);
-
+	bch.vertexType = VCORDTCORD;
+	
     for (int i = 0; i < bch.quadCount; ++i)
     {
         CreateQuadBatch((Vertex *)&bch.vertex_data[i * 4], 0.0f + i % quadsPerRow, 1.0f * (i / quadsPerRow));
@@ -57,7 +58,8 @@ void create_batch_for_level(batch &bch, level &lvl)
     bch.quadCount = quad_count;
     bch.index_count = bch.quadCount * 6;
     bch.vertex_data = (Vertex *)malloc(sizeof(Vertex) * bch.quadCount * 4);
-
+	bch.vertexType = VCORDTCORD;
+	
     int count_for_quad_index = 0;
     for (int i = 0; i < sizeof(lvl.cells) / sizeof(lvl.cells[0]); ++i)
     {
@@ -99,6 +101,41 @@ void CreateQuadBatch(Vertex *array, float x, float y)
     array[3] = ver4;
 }
 
+void CreateSeriesBatchTwoTextures(batch &bch, int quadCount, int quadsPerRow)
+{
+    bch.quadCount = quadCount;
+    bch.index_count = bch.quadCount * 6;
+    bch.vertex_data = (Vertex *)malloc(sizeof(TextureVertex) * bch.quadCount * 4);
+	bch.vertexType = VCORDTCORDTINDEX;
+	
+	bool index = false;
+    for (int i = 0; i < bch.quadCount; ++i)
+    {
+		if(index){
+			CreateQuadBatchTextureIndex(((TextureVertex *)bch.vertex_data) + (i * 4), 0.0f + i % quadsPerRow, 1.0f * (i / quadsPerRow), 1.0f);
+			index = false;
+		}
+		else {
+			CreateQuadBatchTextureIndex(((TextureVertex *)bch.vertex_data) + (i * 4), 0.0f + i % quadsPerRow, 1.0f * (i / quadsPerRow), 0.0f);
+			index = true;
+		}
+    }
+    CreateIndexArrayBatch(bch);
+
+    glCreateBuffers(1, &bch.indexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bch.indexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * bch.index_count, bch.index_data, GL_STATIC_DRAW);
+
+    vertex_buffer vb;
+    vb.vertices = (float *)bch.vertex_data;
+    vb.size = sizeof(TextureVertex) * 4 * bch.quadCount;
+    generate_dynamic_vertex_buffer(vb);
+    bch.vertexBuffer = vb.bufferID;
+    set_vertex_attributef(vb, 0, 3, sizeof(float) * 6, (void *)0);
+    set_vertex_attributef(vb, 1, 2, sizeof(float) * 6, (void *)(sizeof(float) * 3));
+    set_vertex_attributef(vb, 2, 1, sizeof(float) * 6, (void *)(sizeof(float) * 5));
+}
+
 void CreateQuadBatchTextureIndex(TextureVertex *array, float x, float y, float textureID)
 {
     const float size = 1.0f;
@@ -112,7 +149,6 @@ void CreateQuadBatchTextureIndex(TextureVertex *array, float x, float y, float t
     array[1] = ver2;
     array[2] = ver3;
     array[3] = ver4;
-    array = array + 4;
 }
 
 void CreateIndexArrayBatch(batch &bat)

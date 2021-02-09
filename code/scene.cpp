@@ -9,10 +9,10 @@ void scene_init(scene &scn)
     create_batch_for_level(scn.bch, scn.lvl);
 
     auto projection = glm::ortho(0.0f, (float)WINDOW_WIDTH, (float)WINDOW_HEIGHT, 0.0f, -1.0f, 1.0f);
-    scn.batch_model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+    scn.batch_model = glm::translate(glm::mat4(1.0f), glm::vec3(400.0f, 0.0f, 0.0f));
     scn.batch_model = glm::rotate(scn.batch_model, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
     scn.batch_model = glm::rotate(scn.batch_model, glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-    scn.batch_model = glm::scale(scn.batch_model, glm::vec3(80.0f));
+    scn.batch_model = glm::scale(scn.batch_model, glm::vec3(40.0f));
 
     scn.projection = projection;
 

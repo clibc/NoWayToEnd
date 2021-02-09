@@ -21,164 +21,83 @@ static scene scn;
 
 void update_delta_time()
 {
-    currentTime = SDL_GetTicks();
-    deltaTime = ((float)currentTime - (float)lastTime) / 1000.0f;
-    lastTime = currentTime;
+  currentTime = SDL_GetTicks();
+  deltaTime = ((float)currentTime - (float)lastTime) / 1000.0f;
+  lastTime = currentTime;
 }
 
-int main(int argc, char *args[])
-{
-    windowgl_sdl window = {0};
-    create_window(window, "NoWaToEnd", WINDOW_WIDTH, WINDOW_HEIGHT);
+int main(int argc, char *args[]){
+	windowgl_sdl window = {0};
+	create_window(window, "NoWaToEnd", WINDOW_WIDTH, WINDOW_HEIGHT);
 
-    struct VertexI
-    {
-        glm::vec3 position;
-        glm::vec2 texPos;
-        float index;
-    };
+	scene scn;
+	scene_init(scn);
+	
+	batch batch_tex;
+	CreateSeriesBatchTwoTextures(batch_tex, 25, 5);
+	
+	shader simpleShader;
+	create_shader(simpleShader, "../code/shaders/simpleBatch.vs", "../code/shaders/simplefrag.vs");
+	auto modelbatch = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+	modelbatch = glm::scale(modelbatch, glm::vec3(80.0f));
+	
+	set_uniform_mat4(simpleShader, "projection", scn.projection);
+	set_uniform_mat4(simpleShader, "model", modelbatch);
 
-    struct my_batch
-    {
-        VertexI *vertex_data;
-        int *index_data;
-        GLuint indexBuffer;
-        GLuint vertexBuffer;
-        int quadCount;
-        int index_count;
-    };
-
-    my_batch simpleBatch;
-    simpleBatch.quadCount = 9 * 9;
-    simpleBatch.index_count = simpleBatch.quadCount * 6;
-    simpleBatch.vertex_data = (VertexI *)malloc(sizeof(VertexI) * simpleBatch.quadCount * 4);
-
-    bool index = false;
-
-    int quadPerRow = 9;
-    for (int i = 0; i < simpleBatch.quadCount; ++i)
-    {
-        float x = 0.0f + i % quadPerRow;
-        float y = 1.0f * (i / quadPerRow);
-        static auto vertex_data = simpleBatch.vertex_data; // To prevent incrementing actual pointer in struct. This is Gonna be replaced by funcion param.
-
-        const float size = 1.0f;
-        if (!index)
-        {
-            VertexI ver1 = {glm::vec3(x, y, 0.0f), glm::vec2(1.0f, 1.0f), 0.0f};
-            VertexI ver2 = {glm::vec3(x + size, y, 0.0f), glm::vec2(1.0f, 0.0f), 0.0f};
-            VertexI ver3 = {glm::vec3(x + size, y + size, 0.0f), glm::vec2(0.0f, 0.0f), 0.0f};
-            VertexI ver4 = {glm::vec3(x, y + size, 0.0f), glm::vec2(0.0f, 1.0f), 0.0f};
-
-            vertex_data[0] = ver1;
-            vertex_data[1] = ver2;
-            vertex_data[2] = ver3;
-            vertex_data[3] = ver4;
-            vertex_data += 4;
-
-            index = true;
-        }
-        else
-        {
-            VertexI ver1 = {glm::vec3(x, y, 0.0f), glm::vec2(1.0f, 1.0f), 1.0f};
-            VertexI ver2 = {glm::vec3(x + size, y, 0.0f), glm::vec2(1.0f, 0.0f), 1.0f};
-            VertexI ver3 = {glm::vec3(x + size, y + size, 0.0f), glm::vec2(0.0f, 0.0f), 1.0f};
-            VertexI ver4 = {glm::vec3(x, y + size, 0.0f), glm::vec2(0.0f, 1.0f), 1.0f};
-
-            vertex_data[0] = ver1;
-            vertex_data[1] = ver2;
-            vertex_data[2] = ver3;
-            vertex_data[3] = ver4;
-            vertex_data += 4;
-
-            index = false;
-        }
-    }
-
-    {
-        int *indices = (int *)malloc(sizeof(int) * simpleBatch.quadCount * 6);
-        int count = 0;
-        for (int i = 0; i < simpleBatch.quadCount; ++i)
-        {
-            int index = i * 6;
-            indices[index] = count;
-            indices[index + 1] = count + 1;
-            indices[index + 2] = count + 2;
-            indices[index + 3] = count + 2;
-            indices[index + 4] = count + 3;
-            indices[index + 5] = count;
-            count += 4;
-        }
-        simpleBatch.index_data = indices;
-    }
-
-    glCreateBuffers(1, &simpleBatch.indexBuffer);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, simpleBatch.indexBuffer);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(int) * simpleBatch.index_count, simpleBatch.index_data, GL_STATIC_DRAW);
-
-    shader simpleShader;
-    create_shader(simpleShader, "../code/shaders/simpleBatch.vs", "../code/shaders/simplefrag.vs");
-
-    vertex_buffer vb;
-    vb.vertices = (float *)simpleBatch.vertex_data;
-    vb.size = sizeof(VertexI) * 4 * simpleBatch.quadCount;
-    generate_dynamic_vertex_buffer(vb);
-    simpleBatch.vertexBuffer = vb.bufferID;
-
-    set_vertex_attributef(vb, 0, 3, sizeof(float) * 6, (void *)0);
-    set_vertex_attributef(vb, 1, 2, sizeof(float) * 6, (void *)(sizeof(float) * 3));
-    set_vertex_attributef(vb, 2, 1, sizeof(float) * 6, (void *)(sizeof(float) * 5));
-
-    auto projection = glm::ortho(0.0f, (float)WINDOW_WIDTH, (float)WINDOW_HEIGHT, 0.0f, -1.0f, 1.0f);
-    auto model = glm::translate(glm::mat4(1.0f), glm::vec3(10.0f, 10.0f, 0.0f));
-    model = glm::scale(model, glm::vec3(80.0f));
-
-    set_uniform_mat4(simpleShader, "projection", projection);
-    set_uniform_mat4(simpleShader, "model", model);
-
-    texture wallTex;
+	texture wallTex;
     texture_generate(&wallTex, "../assets/wall.png", texture::PNG);
-    texture woodTex;
-    texture_generate(&woodTex, "../assets/wood.jpg", texture::JPG);
+    texture ghostTex;
+    texture_generate(&ghostTex, "../assets/ghost.jpg", texture::JPG);
 
-    int samplers[2] = {0, 1};
+	texture sqareTex;
+    texture_generate(&sqareTex, "../assets/square.jpg", texture::JPG);
+	
+	int samplers[2] = {0, 1};
     auto location = glGetUniformLocation(simpleShader.programID, "textures");
     glUniform1iv(location, 2, samplers);
-
-	// glActiveTexture(GL_TEXTURE0);
-	// texture_bind(wallTex);
-	// glActiveTexture(GL_TEXTURE1);
-	// texture_bind(woodTex);
-
+	glBindTextureUnit(0, sqareTex.textureID);
+	glBindTextureUnit(1, ghostTex.textureID);
 	
-	glBindTextureUnit(0, wallTex.textureID);
-	glBindTextureUnit(1, woodTex.textureID);
+	texture coinTexture;
+	texture_generate(&coinTexture, "../assets/coin.png", texture::PNG);
+	animation coin_animation;
+    create_animation(&coin_animation, &coinTexture, 32);
+
+	texture playerTexture;
+    texture_generate(&playerTexture, "../assets/player.png", texture::PNG);
+
+	auto animModel = glm::translate(glm::mat4(1.0f), glm::vec3(400.0f, 600.0f, 0.0f));
+	animModel = glm::scale(animModel, glm::vec3(300.0f));
 	
-    while (true)
-    {
-        handle_input();
-        update_delta_time();
-        fill_screen_with_color(21, 40, 21, 1);
+	while (true){
+		handle_input();
+		update_delta_time();
+		fill_screen_with_color(21, 21, 21, 1);
 
-        bind_vertex_buffer_id(simpleBatch.vertexBuffer);
-        shader_bind(simpleShader);
+		texture_bind(wallTex);
+		render_batch(scn.bch, scn.reg_shader);
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, simpleBatch.indexBuffer);
-        glDrawElements(GL_TRIANGLES, simpleBatch.quadCount * 6, GL_UNSIGNED_INT, nullptr);
+		texture_bind(ghostTex);
+		texture_bind(sqareTex);
+		render_batch(batch_tex, simpleShader);
+		
+		texture_bind(coinTexture);
+		set_uniform_mat4(scn.anim_shader, "model", animModel);
+		renderer_set_animation(coin_animation, scn.anim_shader);
+		render_animation(scn.anim_shader, scn.anim_vertex);
 
-        swap(window.window);
-    }
-    return 0;
+		
+		swap(window.window);
+	}
+	return 0;
 }
 
 void handle_input()
 {
     KeyboardStates = SDL_GetKeyboardState(NULL);
     SDL_Event e;
-    while (SDL_PollEvent(&e))
-    {
-        switch (e.type)
-        {
+    while (SDL_PollEvent(&e)) {
+        switch (e.type){
         case SDL_WINDOWEVENT:
             if (e.window.event == SDL_WINDOWEVENT_CLOSE)
                 exit(0);

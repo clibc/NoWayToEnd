@@ -31,11 +31,21 @@ void render_batch(batch bch, shader batch_shader)
     shader_bind(batch_shader);
     bind_vertex_buffer_id(bch.vertexBuffer);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void *)0);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void *)(sizeof(float) * 3));
+	if(bch.vertexType == VCORDTCORD){
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void *)0);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void *)(sizeof(float) * 3));
+	}
+	else if(bch.vertexType == VCORDTCORDTINDEX){
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (void *)0);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (void *)(sizeof(float) * 3));	
+		glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (void *)(sizeof(float) * 5));	
+	}
+	else if(bch.vertexType == VCORD){
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, (void *)0);
+	}
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bch.indexBuffer);
-    glDrawElements(GL_TRIANGLES, bch.quadCount * 6, GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, bch.index_count, GL_UNSIGNED_INT, nullptr);
 }
 
 void set_rendering_mode(render_mode mode)

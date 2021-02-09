@@ -35,8 +35,10 @@ bool set_uniform_mat4(shader &shdr, const char *name, const glm::mat4 &matrix)
 {
     glUseProgram(shdr.programID);
     auto loc = get_uniform_location(shdr, name);
-    if (loc == -1)
+    if (loc == -1){
+		debug("Error setting uniform: " << name );
         return false;
+	}
     glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(matrix));
     return true;
 }
@@ -45,8 +47,10 @@ bool set_uniform_vec2(shader &shdr, const char *name, const glm::vec2 &vector)
 {
     glUseProgram(shdr.programID);
     auto loc = get_uniform_location(shdr, name);
-    if (loc == -1)
-        return false;
+    if (loc == -1){
+		debug("Error setting uniform: " << name );
+		return false;
+	}
     glUniform2f(loc, vector.x, vector.y);
     return true;
 }
@@ -55,8 +59,10 @@ bool set_uniform_vec3(shader &shdr, const char *name, const glm::vec3 &vector)
 {
     glUseProgram(shdr.programID);
     auto loc = get_uniform_location(shdr, name);
-    if (loc == -1)
+    if (loc == -1){
+		debug("Error setting uniform: " << name );
         return false;
+	}
     glUniform3f(loc, vector.x, vector.y, vector.z);
     return true;
 }
