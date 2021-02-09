@@ -17,9 +17,9 @@ void generate_dynamic_vertex_buffer(vertex_buffer &vb)
 void set_vertex_attributef(const vertex_buffer &vb, unsigned int index, int size, int32_t stride, const void *pointer)
 {
     glBindBuffer(GL_ARRAY_BUFFER, vb.bufferID);
-	glEnableVertexAttribArray(index);
+    glEnableVertexAttribArray(index);
     glVertexAttribPointer(index, size, GL_FLOAT, GL_FALSE, stride, pointer);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void create_batch_series(batch &bch, int quadCount, int quadsPerRow)
@@ -27,8 +27,8 @@ void create_batch_series(batch &bch, int quadCount, int quadsPerRow)
     bch.quadCount = quadCount;
     bch.index_count = bch.quadCount * 6;
     bch.vertex_data = (Vertex *)malloc(sizeof(Vertex) * bch.quadCount * 4);
-	bch.vertexType = VCORDTCORD;
-	
+    bch.vertexType = VCORDTCORD;
+
     for (int i = 0; i < bch.quadCount; ++i)
     {
         CreateQuadBatch((Vertex *)&bch.vertex_data[i * 4], 0.0f + i % quadsPerRow, 1.0f * (i / quadsPerRow));
@@ -58,8 +58,8 @@ void create_batch_for_level(batch &bch, level &lvl)
     bch.quadCount = quad_count;
     bch.index_count = bch.quadCount * 6;
     bch.vertex_data = (Vertex *)malloc(sizeof(Vertex) * bch.quadCount * 4);
-	bch.vertexType = VCORDTCORD;
-	
+    bch.vertexType = VCORDTCORD;
+
     int count_for_quad_index = 0;
     for (int i = 0; i < sizeof(lvl.cells) / sizeof(lvl.cells[0]); ++i)
     {
@@ -106,19 +106,21 @@ void CreateSeriesBatchTwoTextures(batch &bch, int quadCount, int quadsPerRow)
     bch.quadCount = quadCount;
     bch.index_count = bch.quadCount * 6;
     bch.vertex_data = (Vertex *)malloc(sizeof(TextureVertex) * bch.quadCount * 4);
-	bch.vertexType = VCORDTCORDTINDEX;
-	
-	bool index = false;
+    bch.vertexType = VCORDTCORDTINDEX;
+
+    bool index = false;
     for (int i = 0; i < bch.quadCount; ++i)
     {
-		if(index){
-			CreateQuadBatchTextureIndex(((TextureVertex *)bch.vertex_data) + (i * 4), 0.0f + i % quadsPerRow, 1.0f * (i / quadsPerRow), 1.0f);
-			index = false;
-		}
-		else {
-			CreateQuadBatchTextureIndex(((TextureVertex *)bch.vertex_data) + (i * 4), 0.0f + i % quadsPerRow, 1.0f * (i / quadsPerRow), 0.0f);
-			index = true;
-		}
+        if (index)
+        {
+            CreateQuadBatchTextureIndex(((TextureVertex *)bch.vertex_data) + (i * 4), 0.0f + i % quadsPerRow, 1.0f * (i / quadsPerRow), 1.0f);
+            index = false;
+        }
+        else
+        {
+            CreateQuadBatchTextureIndex(((TextureVertex *)bch.vertex_data) + (i * 4), 0.0f + i % quadsPerRow, 1.0f * (i / quadsPerRow), 0.0f);
+            index = true;
+        }
     }
     CreateIndexArrayBatch(bch);
 

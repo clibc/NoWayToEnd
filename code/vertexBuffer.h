@@ -25,20 +25,22 @@ struct TextureVertex
     float textureID;
 };
 
-enum VertexAttribType{
-					  VCORDTCORDTINDEX,
-					  VCORDTCORD,
-					  VCORD
+enum VertexAttribType
+{
+    VCORDTCORDTINDEX,
+    VCORDTCORD,
+    VCORD
 };
 
-struct batch{
+struct batch
+{
     Vertex *vertex_data;
     int *index_data;
     GLuint indexBuffer;
     GLuint vertexBuffer;
     int quadCount;
     int index_count;
-	VertexAttribType vertexType;
+    VertexAttribType vertexType;
 };
 
 void generate_vertex_buffer(vertex_buffer &vb);
