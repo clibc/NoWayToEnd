@@ -12,8 +12,8 @@ Required packages:
  - libsdl2-dev
  - libglfw3-dev
 
-`cd lbuild/`
-`chmod +x build.sh`
+`cd lbuild/` </br>
+`chmod +x build.sh` </br>
 `./build.sh`
 
 #### Microsoft Windows:
