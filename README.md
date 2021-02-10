@@ -4,7 +4,7 @@ The main reason to change SDL2 rendering engine was making the rendering efficie
 
 ![](https://s2.gifyu.com/images/ezgif-1-a54f4654cd89.gif)
 
-Scene above being rendered with 3 Draw Calls.
+The scene above being rendered with 3 Draw Calls.
 
 # Build instructions :
 #### Linux:
