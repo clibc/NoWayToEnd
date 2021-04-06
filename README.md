@@ -23,7 +23,7 @@ Open `level1.lvl` with Notepad and Edit it according to pattern below:
   - `2`  Coin (finish point)
   - `3`  Player's start position
 
-The way I designed the game only supports the `10x10` level for now. The main purpose I prefer this because SDL2 has no support for batch rendering and making a draw call for each tile is so expensive. In order to make this happen, I will add OpenGL support.
+The way I designed the game only supports the `10x10` level for now. The main reason I prefer this because SDL2 has no support for batch rendering and making a draw call for each tile is so expensive. In order to make this happen, I will add OpenGL support.
 The example level is shown above in the gif.
 ```
 1,0,1,1,1,1,1,1,1,1,
