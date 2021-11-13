@@ -5,7 +5,7 @@ This game is written in C++ with SDL2 and still in development. <br/>
 
 ![](https://thumbs.gfycat.com/WeakKlutzyBlackfly-size_restricted.gif)
 
-Besides the game, the codebase is an API that you can use to make any kind of 2D game. **(after spending some time programming I come back and read this want to say that this is just a BS )**
+Besides the game, the codebase is an API that you can use to make any kind of 2D game. **( after spending some time programming I come back and read this want to say that this is just a BS )**
 
 This little API provides:
    - Easy to use Renderer with well designed abstraction layer.
